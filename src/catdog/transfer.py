@@ -6,10 +6,8 @@ from pathlib import Path
 from typing import Dict, Any, Tuple
 
 import matplotlib.pyplot as plt
-import numpy as np
 import tensorflow as tf
 
-from catdog.callbacks import get_training_callbacks
 from catdog.config import Config
 from catdog.data import load_test_dataset, load_train_val_datasets, set_seed
 from catdog.model import build_transfer_model
@@ -21,7 +19,7 @@ def plot_transfer_history(
     output_path: Path,
 ) -> None:
     """Plot stitched Phase 1 (frozen) and Phase 2 (fine-tuning) learning curves.
-    
+
     Design explanation:
     Visualizing both phases continuously illustrates the transition from feature extraction
     to delicate fine-tuning, highlighting the subsequent accuracy jump.
@@ -37,7 +35,9 @@ def plot_transfer_history(
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5))
 
     ax1.plot(epochs_range, acc, "o-", label="Training Accuracy", color="#2563eb", markersize=4)
-    ax1.plot(epochs_range, val_acc, "s-", label="Validation Accuracy", color="#16a34a", markersize=4)
+    ax1.plot(
+        epochs_range, val_acc, "s-", label="Validation Accuracy", color="#16a34a", markersize=4
+    )
     ax1.axvline(x=p1_len + 0.5, color="#dc2626", linestyle="--", label="Start Fine-Tuning")
     ax1.set_xlabel("Total Epochs")
     ax1.set_ylabel("Accuracy")
@@ -86,7 +86,9 @@ def train_transfer_learning(
     model = build_transfer_model(config, learning_rate=1e-3)
     base_model = model.get_layer("mobilenetv2_base")
     print(f"Base model layers: {len(base_model.layers)}")
-    print(f"Trainable params before fine-tuning: {sum(p.numpy().size for p in model.trainable_weights):,}")
+    print(
+        f"Trainable params before fine-tuning: {sum(p.numpy().size for p in model.trainable_weights):,}"
+    )
 
     cb_phase1 = [
         tf.keras.callbacks.EarlyStopping(
@@ -120,7 +122,9 @@ def train_transfer_learning(
         if isinstance(layer, tf.keras.layers.BatchNormalization):
             layer.trainable = False
 
-    print(f"Trainable params during fine-tuning: {sum(p.numpy().size for p in model.trainable_weights):,}")
+    print(
+        f"Trainable params during fine-tuning: {sum(p.numpy().size for p in model.trainable_weights):,}"
+    )
 
     # Re-compile with 10x lower learning rate to prevent destroying pretrained features
     model.compile(
@@ -233,8 +237,16 @@ def save_model_comparison_table(config: Config, transfer_results: Dict[str, Any]
                     s2_test_acc = item["test_accuracy"]
 
     # Model file sizes
-    b_size = (config.models_dir / "baseline_model.keras").stat().st_size / (1024 * 1024) if (config.models_dir / "baseline_model.keras").exists() else 72.6
-    s2_size = (config.models_dir / "improved_cnn.keras").stat().st_size / (1024 * 1024) if (config.models_dir / "improved_cnn.keras").exists() else 1.6
+    b_size = (
+        (config.models_dir / "baseline_model.keras").stat().st_size / (1024 * 1024)
+        if (config.models_dir / "baseline_model.keras").exists()
+        else 72.6
+    )
+    s2_size = (
+        (config.models_dir / "improved_cnn.keras").stat().st_size / (1024 * 1024)
+        if (config.models_dir / "improved_cnn.keras").exists()
+        else 1.6
+    )
 
     comparison = [
         {

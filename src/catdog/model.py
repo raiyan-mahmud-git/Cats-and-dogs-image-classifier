@@ -8,7 +8,7 @@ from catdog.config import Config
 
 def build_data_augmentation_layer() -> layers.Layer:
     """Build in-model data augmentation pipeline.
-    
+
     Design explanation:
     Placing augmentation layers inside the Keras model ensures transformations run
     efficiently on the computation device (GPU/CPU) during training (`training=True`)
@@ -32,7 +32,7 @@ def build_data_augmentation_layer() -> layers.Layer:
 
 def build_baseline_model(config: Config) -> models.Model:
     """Construct and compile the original freeCodeCamp baseline CNN.
-    
+
     Architecture:
     3x Conv2D + MaxPool2D -> Flatten (36,992 features) -> Dense(512) -> Dropout(0.5) -> Dense(1).
     Total parameters: ~19,034,177 (~72.6 MB).
@@ -70,7 +70,7 @@ def build_baseline_model(config: Config) -> models.Model:
 
 def build_gap_model(config: Config) -> models.Model:
     """Ablation Variant 1: Baseline replaced with GlobalAveragePooling2D.
-    
+
     Design explanation:
     Replacing the 19M-parameter Flatten+Dense layer with GlobalAveragePooling2D
     shrinks spatial feature maps into channel averages, dropping parameter count
@@ -117,7 +117,7 @@ def build_improved_cnn(
     dropout_rate: float = 0.3,
 ) -> models.Model:
     """Stage 2: Production-grade from-scratch CNN.
-    
+
     Design explanation:
     Uses `use_bias=False` Conv2D followed by `BatchNormalization` to stabilize internal
     feature distributions and accelerate convergence. Spatial maps are pooled via
@@ -175,7 +175,7 @@ def build_transfer_model(
     learning_rate: float = 1e-3,
 ) -> models.Model:
     """Stage 3: Pretrained MobileNetV2 Transfer Learning Model.
-    
+
     Design explanation:
     Pretrained MobileNetV2 requires inputs normalized to [-1, 1] (via `Rescaling(1/127.5, offset=-1.0)`).
     The base feature extractor is initially frozen (`trainable=False`), and called with `training=False`
@@ -218,4 +218,3 @@ def build_transfer_model(
         metrics=["accuracy"],
     )
     return model
-

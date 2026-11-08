@@ -5,7 +5,6 @@ from pathlib import Path
 from typing import Dict, Any, List
 
 import matplotlib.pyplot as plt
-import numpy as np
 import tensorflow as tf
 
 from catdog.callbacks import get_training_callbacks
@@ -73,7 +72,9 @@ def run_ablation_experiment(
         "history": history_dict,
     }
 
-    print(f"[{variant_name}] Params: {param_count:,} | Val Acc: {val_acc*100:.2f}% | Test Acc: {test_acc*100:.2f}%")
+    print(
+        f"[{variant_name}] Params: {param_count:,} | Val Acc: {val_acc * 100:.2f}% | Test Acc: {test_acc * 100:.2f}%"
+    )
     return result, model
 
 

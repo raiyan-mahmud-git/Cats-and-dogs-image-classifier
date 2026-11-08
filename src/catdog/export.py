@@ -85,9 +85,7 @@ def _build_inference_model(model: Any, config: Optional[Any] = None) -> Any:
         else:
             x = layer(x)
 
-    inference_model = tf.keras.Model(
-        inputs=inp, outputs=x, name=f"{model.name}_inference"
-    )
+    inference_model = tf.keras.Model(inputs=inp, outputs=x, name=f"{model.name}_inference")
     return inference_model
 
 
@@ -162,9 +160,7 @@ def benchmark_model(
     import tensorflow as tf
 
     model_path = Path(model_path)
-    dummy_input = np.random.rand(1, img_size[0], img_size[1], 3).astype(
-        np.float32
-    )
+    dummy_input = np.random.rand(1, img_size[0], img_size[1], 3).astype(np.float32)
 
     is_tflite = model_path.suffix.lower() == ".tflite"
 
@@ -307,7 +303,7 @@ def main():
             from catdog.config import Config
 
             config = Config()
-            outputs = convert_to_tflite(
+            convert_to_tflite(
                 Path(args.model),
                 output_dir=config.models_dir,
                 quantize_float16=not args.no_float16,

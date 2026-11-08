@@ -13,7 +13,7 @@ from catdog.config import Config
 
 def set_seed(seed: int = 42) -> None:
     """Set global seeds for Python, NumPy, and TensorFlow for reproducibility.
-    
+
     Design explanation:
     Machine learning experiments must be reproducible. Setting random seeds across
     Python's internal random, NumPy, and TensorFlow guarantees deterministic data
@@ -29,7 +29,7 @@ def load_train_val_datasets(
     config: Config,
 ) -> Tuple[tf.data.Dataset, tf.data.Dataset]:
     """Load train and validation datasets with cache and prefetch optimizations.
-    
+
     Design explanation:
     `image_dataset_from_directory` replaces the deprecated `ImageDataGenerator`,
     returning a modern `tf.data.Dataset`. Chaining `.cache()` stores decoded images
@@ -67,7 +67,7 @@ def load_train_val_datasets(
 
 def load_test_dataset(config: Config) -> Tuple[tf.data.Dataset, List[Path]]:
     """Load the flat unlabelled test images deterministically.
-    
+
     Design explanation:
     The test set contains 50 flat image files without class subfolders.
     Instead of brittle workarounds, we directly read files using `tf.io`

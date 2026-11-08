@@ -1,10 +1,8 @@
 """Evaluation module for honest validation and test benchmark reporting."""
 
 import json
-from pathlib import Path
 from typing import Dict, Any, Optional
 
-import numpy as np
 import tensorflow as tf
 
 from catdog.config import Config
@@ -16,7 +14,7 @@ def evaluate_baseline(
     model: Optional[tf.keras.Model] = None,
 ) -> Dict[str, Any]:
     """Evaluate baseline model on both validation data and the 50-image test set.
-    
+
     Design explanation:
     We compute honest, verifiable metrics on validation and the official test set.
     Predictions are aligned with filenames to verify ground-truth indexing, and
@@ -28,9 +26,7 @@ def evaluate_baseline(
     if model is None:
         model_path = config.models_dir / "baseline_model.keras"
         if not model_path.exists():
-            raise FileNotFoundError(
-                f"Model file not found at {model_path}. Run training first."
-            )
+            raise FileNotFoundError(f"Model file not found at {model_path}. Run training first.")
         print(f"[Evaluation] Loading model from: {model_path}")
         model = tf.keras.models.load_model(model_path)
 
@@ -46,7 +42,7 @@ def evaluate_baseline(
     # 2. Test set evaluation
     test_ds, test_files = load_test_dataset(config)
     raw_predictions = model.predict(test_ds, verbose=0)
-    
+
     # Flatten (N, 1) to (N,) to avoid iterating over single-element arrays
     probabilities = raw_predictions.ravel().tolist()
     binary_predictions = [1 if p > 0.5 else 0 for p in probabilities]
@@ -59,7 +55,9 @@ def evaluate_baseline(
     # 3. Filename order and alignment verification
     print("\n50-IMAGE TEST SET PREDICTIONS & GROUND TRUTH ALIGNMENT:")
     print("-" * 75)
-    print(f"{'Idx':<4} | {'Filename':<10} | {'Prob(Dog)':<10} | {'Pred':<5} | {'Truth':<5} | {'Match':<5}")
+    print(
+        f"{'Idx':<4} | {'Filename':<10} | {'Prob(Dog)':<10} | {'Pred':<5} | {'Truth':<5} | {'Match':<5}"
+    )
     print("-" * 75)
 
     test_results = []
@@ -67,7 +65,7 @@ def evaluate_baseline(
     for idx, (p, pred, truth, file_path) in enumerate(
         zip(probabilities, binary_predictions, ground_truth, test_files)
     ):
-        is_match = (pred == truth)
+        is_match = pred == truth
         if is_match:
             correct_count += 1
         label_str = "Dog" if pred == 1 else "Cat"

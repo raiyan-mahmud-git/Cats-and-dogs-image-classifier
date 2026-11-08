@@ -9,9 +9,10 @@ from typing import List
 @dataclass
 class Config:
     """Project configuration object.
-    
+
     Eliminates duplicated and conflicting settings across notebooks and scripts.
     """
+
     # Image specifications
     img_height: int = 150
     img_width: int = 150
@@ -58,11 +59,56 @@ class Config:
     # Official freeCodeCamp 50-image test set answers (0 = cat, 1 = dog)
     fcc_test_answers: List[int] = field(
         default_factory=lambda: [
-            1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0,
-            1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0,
-            1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1,
-            1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1,
-            0, 0, 0, 0, 0, 0
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
         ]
     )
 

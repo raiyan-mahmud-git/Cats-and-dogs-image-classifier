@@ -14,7 +14,7 @@ from catdog.model import build_baseline_model
 
 def plot_and_save_training_curves(history: Dict[str, Any], output_path: Path) -> None:
     """Plot and save training and validation loss and accuracy curves.
-    
+
     Design explanation:
     Comparing train vs validation curves across all epochs visually diagnoses
     overfitting, learning plateaus, and training stability without guessing.

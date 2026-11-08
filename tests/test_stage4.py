@@ -13,7 +13,6 @@ from catdog.config import Config
 from catdog.explainability import generate_gradcam_heatmap, superimpose_gradcam
 from catdog.metrics import (
     compute_binary_metrics,
-    compute_calibration,
     compute_roc_auc,
     compute_wilson_confidence_interval,
 )

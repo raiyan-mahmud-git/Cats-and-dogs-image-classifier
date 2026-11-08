@@ -11,7 +11,7 @@ def compute_binary_metrics(
     threshold: float = 0.5,
 ) -> Dict[str, Any]:
     """Compute standard binary classification metrics from ground truth and probabilities.
-    
+
     Design explanation:
     Beyond simple accuracy, balanced evaluation requires precision, recall, specificity,
     and F1-score to detect asymmetric class performance and false alarm rates.
@@ -49,7 +49,7 @@ def compute_roc_auc(
     num_thresholds: int = 200,
 ) -> Tuple[List[float], List[float], float]:
     """Compute ROC curve coordinates and Area Under Curve (AUC) via trapezoidal integration.
-    
+
     Design explanation:
     The ROC curve illustrates the diagnostic tradeoff between sensitivity and (1 - specificity)
     across all classification thresholds. AUC provides a threshold-independent measure of ranking quality.
@@ -95,7 +95,7 @@ def compute_calibration(
     n_bins: int = 10,
 ) -> Tuple[List[float], List[float], float]:
     """Calculate reliability diagram data and Expected Calibration Error (ECE).
-    
+
     Design explanation:
     A well-calibrated classifier outputs probabilities that match empirical frequencies
     (e.g., when the model predicts 0.9 confidence, it should be correct 90% of the time).
@@ -134,7 +134,7 @@ def compute_wilson_confidence_interval(
     confidence_level: float = 0.95,
 ) -> Tuple[float, float, float]:
     """Compute the Wilson score confidence interval for a binomial proportion.
-    
+
     Design explanation:
     Unlike the naive Wald interval which fails near 0 and 1, the Wilson score interval
     accurately reflects sample size uncertainty. Comparing 50 test images vs 1,000 validation

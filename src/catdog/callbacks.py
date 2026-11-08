@@ -1,6 +1,5 @@
 """Callback definitions for training control, checkpointing, and logging."""
 
-from pathlib import Path
 from typing import List
 
 import tensorflow as tf
@@ -15,7 +14,7 @@ def get_training_callbacks(
     reduce_lr_patience: int = 4,
 ) -> List[tf.keras.callbacks.Callback]:
     """Build callbacks for adaptive training, checkpointing, and telemetry.
-    
+
     Design explanation:
     - `EarlyStopping`: Halts training when validation metric stops improving. We use a generous
       patience (10 epochs) because networks with BatchNormalization require 5-8 epochs for running

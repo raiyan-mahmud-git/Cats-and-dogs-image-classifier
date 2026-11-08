@@ -9,10 +9,6 @@ Covers:
 - CLI argument parsing
 """
 
-import csv
-from pathlib import Path
-from unittest.mock import patch
-
 import numpy as np
 import pytest
 from PIL import Image as PILImage

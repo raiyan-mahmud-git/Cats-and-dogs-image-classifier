@@ -4,7 +4,6 @@ Tests for Stage 6: Web Demo (FastAPI REST API & Gradio application).
 """
 
 import io
-from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 from PIL import Image as PILImage

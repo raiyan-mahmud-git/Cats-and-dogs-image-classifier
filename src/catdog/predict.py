@@ -93,8 +93,7 @@ def _load_and_validate_image(
     ext = image_path.suffix.lower()
     if ext not in VALID_EXTENSIONS:
         raise ImageValidationError(
-            f"Unsupported file type '{ext}'. "
-            f"Accepted: {', '.join(sorted(VALID_EXTENSIONS))}"
+            f"Unsupported file type '{ext}'. Accepted: {', '.join(sorted(VALID_EXTENSIONS))}"
         )
 
     # 3. File size
@@ -115,9 +114,7 @@ def _load_and_validate_image(
         pil_img = PILImage.open(image_path)
         pil_img.load()  # Force full decode; truncated files fail here
     except Exception as e:
-        raise ImageValidationError(
-            f"Cannot decode image '{image_path.name}': {e}"
-        )
+        raise ImageValidationError(f"Cannot decode image '{image_path.name}': {e}")
 
     # 5. Channel normalization
     if pil_img.mode == "L":
@@ -176,9 +173,7 @@ class CatDogPredictor:
                     break
 
         if model_path is None:
-            raise FileNotFoundError(
-                "No trained model found in models/. Run training first."
-            )
+            raise FileNotFoundError("No trained model found in models/. Run training first.")
 
         self.model_path = Path(model_path)
         if not self.model_path.exists():
@@ -187,9 +182,7 @@ class CatDogPredictor:
         self._is_tflite = self.model_path.suffix.lower() == ".tflite"
 
         if self._is_tflite:
-            self._interpreter = _tf.lite.Interpreter(
-                model_path=str(self.model_path)
-            )
+            self._interpreter = _tf.lite.Interpreter(model_path=str(self.model_path))
             self._interpreter.allocate_tensors()
             self._input_details = self._interpreter.get_input_details()
             self._output_details = self._interpreter.get_output_details()
@@ -208,18 +201,12 @@ class CatDogPredictor:
     def _predict_tflite(self, img_array: np.ndarray) -> float:
         """Run inference through the TFLite interpreter."""
         batch = np.expand_dims(img_array, axis=0).astype(np.float32)
-        self._interpreter.set_tensor(
-            self._input_details[0]["index"], batch
-        )
+        self._interpreter.set_tensor(self._input_details[0]["index"], batch)
         self._interpreter.invoke()
-        output = self._interpreter.get_tensor(
-            self._output_details[0]["index"]
-        )
+        output = self._interpreter.get_tensor(self._output_details[0]["index"])
         return float(output.ravel()[0])
 
-    def predict_image(
-        self, image_path: Union[str, Path]
-    ) -> Dict[str, Any]:
+    def predict_image(self, image_path: Union[str, Path]) -> Dict[str, Any]:
         """Predict whether an image is a cat or a dog.
 
         Returns a dict with keys:
@@ -250,9 +237,7 @@ class CatDogPredictor:
             "time_ms": round(elapsed_ms, 1),
         }
 
-    def predict_folder(
-        self, folder_path: Union[str, Path]
-    ) -> List[Dict[str, Any]]:
+    def predict_folder(self, folder_path: Union[str, Path]) -> List[Dict[str, Any]]:
         """Predict all valid images in a folder, skipping invalid files.
 
         Returns a list of result dicts (same schema as predict_image),
@@ -275,9 +260,7 @@ class CatDogPredictor:
                 result = self.predict_image(f)
                 results.append(result)
             except ImageValidationError as e:
-                results.append(
-                    {"image": f.name, "label": "ERROR", "error": str(e)}
-                )
+                results.append({"image": f.name, "label": "ERROR", "error": str(e)})
 
         return results
 
@@ -381,9 +364,7 @@ def _write_csv(results: List[Dict[str, Any]], csv_path: str) -> None:
     """Write prediction results to a CSV file."""
     fieldnames = ["image", "label", "confidence_pct", "dog_probability", "time_ms", "error"]
     with open(csv_path, "w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(
-            f, fieldnames=fieldnames, extrasaction="ignore"
-        )
+        writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
         writer.writeheader()
         for r in results:
             writer.writerow(r)

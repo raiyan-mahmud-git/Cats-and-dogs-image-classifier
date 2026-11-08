@@ -13,8 +13,6 @@ Covers:
 from pathlib import Path
 import tomllib
 import yaml
-import numpy as np
-import pytest
 
 from catdog import __version__
 from catdog.predict import CatDogPredictor

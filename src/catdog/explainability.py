@@ -1,7 +1,7 @@
 """Explainability module: Grad-CAM heatmaps, failure analysis, and diagnostic visualizations."""
 
 from pathlib import Path
-from typing import Dict, Any, List, Tuple, Optional
+from typing import Dict, Any, List
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -13,7 +13,7 @@ def generate_gradcam_heatmap(
     img_array: np.ndarray,
 ) -> np.ndarray:
     """Generate Grad-CAM heatmap for an image using MobileNetV2's final convolutional layer.
-    
+
     Design explanation:
     Grad-CAM uses the gradients of the target class flowing into the final convolutional
     layer (`out_relu`) to produce a coarse 2D localization map highlighting the salient
@@ -77,7 +77,7 @@ def superimpose_gradcam(
     colormap_name: str = "jet",
 ) -> np.ndarray:
     """Superimpose Grad-CAM heatmap over an RGB image.
-    
+
     Design explanation:
     We upsample the low-resolution conv heatmap to image dimensions, apply a perceptually
     vibrant colormap, and alpha-blend it with the original pixels to reveal exact feature focus.
@@ -108,10 +108,12 @@ def plot_confusion_matrix(
     output_path: Path,
 ) -> None:
     """Plot an annotated confusion matrix visualization."""
-    matrix = np.array([
-        [cm["tn"], cm["fp"]],
-        [cm["fn"], cm["tp"]],
-    ])
+    matrix = np.array(
+        [
+            [cm["tn"], cm["fp"]],
+            [cm["fn"], cm["tp"]],
+        ]
+    )
 
     fig, ax = plt.subplots(figsize=(6, 5))
     cax = ax.matshow(matrix, cmap="Blues", alpha=0.8)
@@ -130,7 +132,9 @@ def plot_confusion_matrix(
             val = matrix[i, j]
             label = f"{val}\n({(val / np.sum(matrix)) * 100:.1f}%)"
             color = "white" if val > np.max(matrix) / 2 else "black"
-            ax.text(j, i, label, ha="center", va="center", color=color, fontsize=12, fontweight="bold")
+            ax.text(
+                j, i, label, ha="center", va="center", color=color, fontsize=12, fontweight="bold"
+            )
 
     fig.colorbar(cax)
     plt.tight_layout()
@@ -149,7 +153,9 @@ def plot_roc_curve(
     fig, ax = plt.subplots(figsize=(7, 6))
 
     ax.plot(fpr, tpr, color="#2563eb", lw=2.5, label=f"ROC Curve (AUC = {roc_auc:.4f})")
-    ax.plot([0, 1], [0, 1], color="#94a3b8", linestyle="--", lw=1.5, label="Random Guess (AUC = 0.50)")
+    ax.plot(
+        [0, 1], [0, 1], color="#94a3b8", linestyle="--", lw=1.5, label="Random Guess (AUC = 0.50)"
+    )
     ax.fill_between(fpr, tpr, alpha=0.15, color="#2563eb")
 
     ax.set_xlim([0.0, 1.0])
@@ -176,7 +182,15 @@ def plot_calibration_curve(
     fig, ax = plt.subplots(figsize=(7, 6))
 
     ax.plot([0, 1], [0, 1], "k--", label="Perfect Calibration")
-    ax.plot(bin_confs, bin_accs, "s-", color="#16a34a", lw=2, markersize=7, label=f"Model (ECE = {ece:.4f})")
+    ax.plot(
+        bin_confs,
+        bin_accs,
+        "s-",
+        color="#16a34a",
+        lw=2,
+        markersize=7,
+        label=f"Model (ECE = {ece:.4f})",
+    )
 
     ax.set_xlim([0.0, 1.0])
     ax.set_ylim([0.0, 1.05])
@@ -197,7 +211,7 @@ def plot_failure_gallery(
     output_path: Path,
 ) -> None:
     """Plot a gallery of the most confidently wrong predictions with Grad-CAM heatmaps.
-    
+
     Design explanation:
     Pairing the original image with its Grad-CAM activation visually reveals why the model
     failed (e.g. background textures, cropped features, or confusing pose angles).

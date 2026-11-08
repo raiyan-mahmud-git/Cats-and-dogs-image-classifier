@@ -95,7 +95,9 @@ def run_comprehensive_evaluation(config: Config = None) -> Dict[str, Any]:
     print("=" * 65)
     print(f"Validation Set (N = {len(val_true)}):")
     print(f"  Accuracy:      {val_metrics['accuracy'] * 100:.2f}%")
-    print(f"  95% CI:        [{val_ci_low * 100:.2f}%, {val_ci_high * 100:.2f}%] (+/- {val_ci_margin * 100:.2f}%)")
+    print(
+        f"  95% CI:        [{val_ci_low * 100:.2f}%, {val_ci_high * 100:.2f}%] (+/- {val_ci_margin * 100:.2f}%)"
+    )
     print(f"  Precision:     {val_metrics['precision'] * 100:.2f}%")
     print(f"  Recall:        {val_metrics['recall'] * 100:.2f}%")
     print(f"  Specificity:   {val_metrics['specificity'] * 100:.2f}%")
@@ -104,9 +106,15 @@ def run_comprehensive_evaluation(config: Config = None) -> Dict[str, Any]:
     print(f"  Expected Calibration Error (ECE): {ece:.4f}")
 
     print(f"\nTest Set (N = {len(test_true)}):")
-    print(f"  Accuracy:      {test_metrics['accuracy'] * 100:.2f}% ({int(test_metrics['accuracy'] * len(test_true))}/{len(test_true)})")
-    print(f"  95% CI:        [{test_ci_low * 100:.2f}%, {test_ci_high * 100:.2f}%] (+/- {test_ci_margin * 100:.2f}%)")
-    print(f"  Notice: The 95% CI is {test_ci_margin / val_ci_margin:.1f}x WIDER on 50 images than on 1,000 images!")
+    print(
+        f"  Accuracy:      {test_metrics['accuracy'] * 100:.2f}% ({int(test_metrics['accuracy'] * len(test_true))}/{len(test_true)})"
+    )
+    print(
+        f"  95% CI:        [{test_ci_low * 100:.2f}%, {test_ci_high * 100:.2f}%] (+/- {test_ci_margin * 100:.2f}%)"
+    )
+    print(
+        f"  Notice: The 95% CI is {test_ci_margin / val_ci_margin:.1f}x WIDER on 50 images than on 1,000 images!"
+    )
     print("=" * 65)
 
     # -----------------------------------------------------------------
@@ -136,16 +144,18 @@ def run_comprehensive_evaluation(config: Config = None) -> Dict[str, Any]:
         p = float(test_preds[idx])
         conf = p if p > 0.5 else (1.0 - p)
 
-        wrong_cases.append({
-            "index": int(idx + 1),
-            "filename": test_files[idx].name,
-            "true_label": "Dog" if test_true[idx] == 1 else "Cat",
-            "pred_label": "Dog" if test_binary[idx] == 1 else "Cat",
-            "probability": round(p, 4),
-            "confidence": round(conf * 100, 2),
-            "original_image": raw_img,
-            "gradcam_overlay": overlay,
-        })
+        wrong_cases.append(
+            {
+                "index": int(idx + 1),
+                "filename": test_files[idx].name,
+                "true_label": "Dog" if test_true[idx] == 1 else "Cat",
+                "pred_label": "Dog" if test_binary[idx] == 1 else "Cat",
+                "probability": round(p, 4),
+                "confidence": round(conf * 100, 2),
+                "original_image": raw_img,
+                "gradcam_overlay": overlay,
+            }
+        )
 
     gallery_path = config.reports_dir / "failure_analysis_gallery.png"
     plot_failure_gallery(wrong_cases, gallery_path)

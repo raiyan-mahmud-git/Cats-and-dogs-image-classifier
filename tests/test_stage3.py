@@ -57,7 +57,7 @@ def test_fine_tuning_unfreezing():
             layer.trainable = False
 
     # Layers after 100 that are not BatchNorm should be trainable
-    trainable_base_layers = [l for l in base_model.layers[100:] if l.trainable]
+    trainable_base_layers = [lyr for lyr in base_model.layers[100:] if lyr.trainable]
     assert len(trainable_base_layers) > 0
     # No BatchNorm layer in the entire base should be trainable
     for layer in base_model.layers:

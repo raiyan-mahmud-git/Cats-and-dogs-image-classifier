@@ -19,14 +19,13 @@ Design decisions:
 
 import base64
 import io
-import time
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Optional
 
 import numpy as np
 from fastapi import FastAPI, File, HTTPException, Query, UploadFile, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, HTMLResponse, Response
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from PIL import Image as PILImage
 from pydantic import BaseModel, Field
@@ -72,13 +71,9 @@ if STATIC_DIR.exists():
 class HealthResponse(BaseModel):
     status: str = Field(..., json_schema_extra={"example": "healthy"})
     version: str = Field(..., json_schema_extra={"example": __version__})
-    active_model: str = Field(
-        ..., json_schema_extra={"example": "transfer_model_float16.tflite"}
-    )
+    active_model: str = Field(..., json_schema_extra={"example": "transfer_model_float16.tflite"})
     is_tflite: bool = Field(..., json_schema_extra={"example": True})
-    target_image_size: list = Field(
-        ..., json_schema_extra={"example": [150, 150]}
-    )
+    target_image_size: list = Field(..., json_schema_extra={"example": [150, 150]})
 
 
 class PredictionResponse(BaseModel):
@@ -229,9 +224,7 @@ async def predict_image_endpoint(
                 tmp_path, target_size=(config.img_height, config.img_width)
             )
             heatmap = generate_gradcam_heatmap(keras_model, raw_array)
-            overlay = superimpose_gradcam(
-                raw_array.astype(np.uint8), heatmap, alpha=0.45
-            )
+            overlay = superimpose_gradcam(raw_array.astype(np.uint8), heatmap, alpha=0.45)
 
             # Encode overlay as base64 JPEG
             overlay_pil = PILImage.fromarray(overlay)
