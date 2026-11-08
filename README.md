@@ -1,13 +1,14 @@
 # 🐾 Cat vs Dog AI Vision: Production Classifier & Explainability
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://cats-and-dogs-image-classifier.streamlit.app/)
 [![CI](https://github.com/raiyan-mahmud-git/Cats-and-dogs-image-classifier/actions/workflows/ci.yml/badge.svg)](https://github.com/raiyan-mahmud-git/Cats-and-dogs-image-classifier/actions/workflows/ci.yml)
 [![Python 3.11 | 3.12](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue.svg)](https://www.python.org/)
 [![TensorFlow 2.16+](https://img.shields.io/badge/TensorFlow-2.16+-FF6F00.svg?logo=tensorflow)](https://tensorflow.org/)
 [![Keras 3](https://img.shields.io/badge/Keras-3.x-D00000.svg?logo=keras)](https://keras.io/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B.svg?logo=streamlit)](https://streamlit.io/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-REST%20API-009688.svg?logo=fastapi)](https://fastapi.tiangolo.com/)
 [![Accuracy](https://img.shields.io/badge/FCC%20Test%20Accuracy-98.0%25-brightgreen.svg)](#-empirical-benchmarks)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+> 🚀 **Live Interactive Demo:** [**cats-and-dogs-image-classifier.streamlit.app**](https://cats-and-dogs-image-classifier.streamlit.app/)
 
 An end-to-end, production-grade deep learning computer vision system built for the **freeCodeCamp Machine Learning Certification Challenge**. 
 
@@ -89,18 +90,20 @@ python -m catdog.predict cats_and_dogs/test/ --csv results.csv
 
 ---
 
-## 🌐 1-Click Free Cloud Deployment (Streamlit Community Cloud)
+## 🌐 Live Web Demo & Cloud Deployment
 
-You can host this project online for free with **zero Docker installation**:
+The application is deployed continuously via **Streamlit Community Cloud**, directly synchronized with the `main` branch:
 
-1. Log in to **[share.streamlit.io](https://share.streamlit.io)** with your GitHub account.
-2. Click **"New app"** (or **"Create app"**).
-3. Select your repository:
-   - **Repository:** `raiyan-mahmud-git/Cats-and-dogs-image-classifier`
-   - **Branch:** `main`
-   - **Main file path:** `app_streamlit.py`
-4. Click **"Deploy!"**
-5. Streamlit Community Cloud will automatically build from [`requirements.txt`](requirements.txt) and provide a permanent public HTTPS URL.
+👉 **[🚀 Launch Live Application: cats-and-dogs-image-classifier.streamlit.app](https://cats-and-dogs-image-classifier.streamlit.app/)**
+
+<details>
+<summary><b>🛠️ Deploy your own instance (Click to expand)</b></summary>
+
+1. Fork this repository.
+2. Log in to **[share.streamlit.io](https://share.streamlit.io)** with your GitHub account.
+3. Click **"New app"**, select your fork, branch `main`, and set **Main file path** to `app_streamlit.py`.
+4. Click **"Deploy!"** Streamlit Cloud automatically builds from [`requirements.txt`](requirements.txt) with zero configuration.
+</details>
 
 ---
 
