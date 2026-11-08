@@ -1,0 +1,37 @@
+# ===========================================================================
+# .gitignore
+# ===========================================================================
+
+# Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+build/
+dist/
+*.egg-info/
+
+# Python & Pytest Caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Dataset files & Archives (Keep only the 1MB 50-image test set for demos)
+cats_and_dogs.zip
+cats_and_dogs/train/
+cats_and_dogs/validation/
+
+# Large Training Checkpoints (>100MB exceeds GitHub limit)
+# Keep only the production deployment models (TFLite & inference model)
+models/baseline_model.keras
+models/transfer_model.keras
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini

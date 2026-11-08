@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cat vs Dog AI Classifier & Explainability</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --cat-color: #ec4899;
+      --dog-color: #3b82f6;
+      --badge-bg: rgba(59, 130, 246, 0.15);
+      --badge-text: #60a5fa;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+      --radius: 16px;
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="light"] {
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --cat-color: #db2777;
+      --dog-color: #2563eb;
+      --badge-bg: rgba(37, 99, 235, 0.1);
+      --badge-text: #1d4ed8;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    header {
+      padding: 1.25rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--card-border);
+      background-color: var(--card-bg);
+      backdrop-filter: blur(8px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+
+    .brand span.emoji {
+      font-size: 1.5rem;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .theme-toggle, .api-link {
+      background: none;
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      padding: 0.5rem 0.9rem;
+      border-radius: 9999px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+
+    .theme-toggle:hover, .api-link:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    main {
+      flex: 1;
+      max-width: 1100px;
+      width: 100%;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 840px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      transition: var(--transition);
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Drop Zone */
+    .dropzone {
+      border: 2px dashed var(--card-border);
+      border-radius: 12px;
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      background-color: rgba(255, 255, 255, 0.02);
+      position: relative;
+    }
+
+    .dropzone.dragover {
+      border-color: var(--primary);
+      background-color: rgba(59, 130, 246, 0.08);
+      transform: scale(0.99);
+    }
+
+    .dropzone input[type="file"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .dropzone-icon {
+      font-size: 3rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .dropzone-text {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .dropzone-subtext {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Samples section */
+    .samples-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .samples-label {
+      font-size: 0.825rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .sample-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .sample-pill {
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .sample-pill:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Options */
+    .options-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      background-color: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+    }
+
+    .toggle-label {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .toggle-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: var(--card-border);
+      transition: .3s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--primary);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+    /* Right Card (Results) */
+    .preview-box {
+      width: 100%;
+      height: 240px;
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .preview-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: opacity 0.3s ease;
+    }
+
+    .placeholder-state {
+      color: var(--text-muted);
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .overlay-selector {
+      display: none;
+      gap: 0.5rem;
+      margin-top: -0.5rem;
+    }
+
+    .btn-tab {
+      flex: 1;
+      padding: 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border-radius: 6px;
+      border: 1px solid var(--card-border);
+      background: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-tab.active {
+      background-color: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    /* Bars */
+    .metric-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .bar-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .bar-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .bar-track {
+      width: 100%;
+      height: 12px;
+      background-color: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      transition: width 0.6s cubic-bezier(0.1, 1, 0.1, 1);
+    }
+
+    .bar-fill.dog {
+      background-color: var(--dog-color);
+    }
+
+    .bar-fill.cat {
+      background-color: var(--cat-color);
+    }
+
+    .stats-footer {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--card-border);
+      padding-top: 1rem;
+      margin-top: auto;
+    }
+
+    .badge {
+      padding: 0.25rem 0.6rem;
+      background-color: var(--badge-bg);
+      color: var(--badge-text);
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.75rem;
+    }
+
+    /* Alerts */
+    .alert {
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      display: none;
+    }
+
+    .alert.error {
+      background-color: rgba(239, 68, 68, 0.15);
+      border: 1px solid #ef4444;
+      color: #f87171;
+    }
+
+    .loading-spinner {
+      display: none;
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(255, 255, 255, 0.2);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+
+  <header>
+    <div class="brand">
+      <span class="emoji">🐾</span>
+      <span>Cat vs Dog AI Vision</span>
+    </div>
+    <div class="header-actions">
+      <a href="/docs" target="_blank" class="api-link" title="OpenAPI / Swagger Documentation">
+        <span>📖 API Docs</span>
+      </a>
+      <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">
+        <span id="themeIcon">☀️</span>
+        <span id="themeText">Light</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Left Card: Input -->
+    <div class="card">
+      <div class="card-title">
+        <span>Upload & Analyze</span>
+        <span class="badge" id="runtimeBadge">TFLite Engine</span>
+      </div>
+
+      <div class="dropzone" id="dropzone">
+        <input type="file" id="fileInput" accept="image/*" />
+        <div class="dropzone-icon">📷</div>
+        <div class="dropzone-text">Drop an image here or click to browse</div>
+        <div class="dropzone-subtext">JPEG, PNG, WebP up to 20 MB</div>
+      </div>
+
+      <div class="options-row">
+        <div>
+          <div class="toggle-label">Grad-CAM Salience Overlay</div>
+          <div class="toggle-sub">Visualize high-level attention heatmaps</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="explainToggle" checked />
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="samples-container">
+        <div class="samples-label">Quick Test Samples:</div>
+        <div class="sample-pills">
+          <button class="sample-pill" onclick="loadSample('1.jpg')">Sample 1 (Dog)</button>
+          <button class="sample-pill" onclick="loadSample('2.jpg')">Sample 2 (Dog)</button>
+          <button class="sample-pill" onclick="loadSample('3.jpg')">Sample 3 (Dog)</button>
+          <button class="sample-pill" onclick="loadSample('4.jpg')">Sample 4 (Cat)</button>
+          <button class="sample-pill" onclick="loadSample('32.jpg')">Sample 32 (Tricky Dog)</button>
+        </div>
+      </div>
+
+      <div class="alert error" id="alertBox"></div>
+      <div class="loading-spinner" id="spinner"></div>
+    </div>
+
+    <!-- Right Card: Output & Explainability -->
+    <div class="card">
+      <div class="card-title">
+        <span>Prediction & Explainability</span>
+        <span class="badge" id="latencyBadge">-- ms</span>
+      </div>
+
+      <div class="preview-box">
+        <div class="placeholder-state" id="placeholder">Upload an image to see predictions</div>
+        <img id="previewImg" style="display: none;" alt="Preview" />
+      </div>
+
+      <div class="overlay-selector" id="overlayTabs">
+        <button class="btn-tab active" id="tabOriginal" onclick="switchView('original')">Original Photo</button>
+        <button class="btn-tab" id="tabGradcam" onclick="switchView('gradcam')">Grad-CAM Heatmap</button>
+      </div>
+
+      <div class="metric-group">
+        <div class="bar-row">
+          <div class="bar-header">
+            <span>🐶 Dog Probability</span>
+            <span id="dogProbLabel">0.0%</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill dog" id="dogBar"></div>
+          </div>
+        </div>
+
+        <div class="bar-row">
+          <div class="bar-header">
+            <span>🐱 Cat Probability</span>
+            <span id="catProbLabel">0.0%</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill cat" id="catBar"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-footer">
+        <span id="fileMeta">No file selected</span>
+        <span id="predDecision">Awaiting input</span>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // State
+    let currentOriginalSrc = null;
+    let currentGradcamSrc = null;
+
+    // Theme Toggle
+    const themeToggle = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
+    const themeText = document.getElementById("themeText");
+
+    themeToggle.addEventListener("click", () => {
+      const current = document.body.getAttribute("data-theme");
+      const next = current === "dark" ? "light" : "dark";
+      document.body.setAttribute("data-theme", next);
+      themeIcon.textContent = next === "dark" ? "☀️" : "🌙";
+      themeText.textContent = next === "dark" ? "Light" : "Dark";
+    });
+
+    // Check runtime health
+    fetch("/api/health")
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("runtimeBadge").textContent = data.is_tflite ? "TFLite Active (Fast)" : "Keras Engine";
+      })
+      .catch(() => {});
+
+    // File Drop & Select
+    const dropzone = document.getElementById("dropzone");
+    const fileInput = document.getElementById("fileInput");
+
+    dropzone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropzone.classList.add("dragover");
+    });
+
+    dropzone.addEventListener("dragleave", () => {
+      dropzone.classList.remove("dragover");
+    });
+
+    dropzone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropzone.classList.remove("dragover");
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        handleUpload(e.dataTransfer.files[0]);
+      }
+    });
+
+    fileInput.addEventListener("change", (e) => {
+      if (e.target.files && e.target.files[0]) {
+        handleUpload(e.target.files[0]);
+      }
+    });
+
+    // Sample Loader
+    async function loadSample(sampleName) {
+      clearError();
+      showSpinner(true);
+      try {
+        const res = await fetch(`/api/sample/${sampleName}`);
+        if (!res.ok) throw new Error("Sample could not be loaded");
+        const blob = await res.blob();
+        const file = new File([blob], sampleName, { type: "image/jpeg" });
+        await handleUpload(file);
+      } catch (err) {
+        showError(err.message);
+        showSpinner(false);
+      }
+    }
+
+    // Upload & Predict
+    async function handleUpload(file) {
+      clearError();
+      showSpinner(true);
+
+      // Local preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        currentOriginalSrc = e.target.result;
+        setPreview(currentOriginalSrc);
+      };
+      reader.readAsDataURL(file);
+
+      const explain = document.getElementById("explainToggle").checked;
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const resp = await fetch(`/api/predict?explain=${explain}`, {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!resp.ok) {
+          const err = await resp.json();
+          throw new Error(err.detail || "Prediction request failed");
+        }
+
+        const data = await resp.json();
+        renderResults(data);
+      } catch (err) {
+        showError(err.message);
+      } finally {
+        showSpinner(false);
+      }
+    }
+
+    function renderResults(data) {
+      // Probabilities & Bars
+      const dogPercent = (data.dog_probability * 100).toFixed(1);
+      const catPercent = (data.cat_probability * 100).toFixed(1);
+
+      document.getElementById("dogBar").style.width = `${dogPercent}%`;
+      document.getElementById("catBar").style.width = `${catPercent}%`;
+      document.getElementById("dogProbLabel").textContent = `${dogPercent}%`;
+      document.getElementById("catProbLabel").textContent = `${catPercent}%`;
+
+      // Latency & Meta
+      document.getElementById("latencyBadge").textContent = `${data.inference_time_ms.toFixed(1)} ms`;
+      document.getElementById("fileMeta").textContent = data.filename;
+      document.getElementById("predDecision").textContent = `Predicted: ${data.label} (${data.confidence_pct}%)`;
+
+      // Grad-CAM
+      const overlayTabs = document.getElementById("overlayTabs");
+      if (data.gradcam_base64) {
+        currentGradcamSrc = data.gradcam_base64;
+        overlayTabs.style.display = "flex";
+        switchView("gradcam"); // show heatmap directly
+      } else {
+        currentGradcamSrc = null;
+        overlayTabs.style.display = "none";
+        switchView("original");
+      }
+    }
+
+    function switchView(mode) {
+      const img = document.getElementById("previewImg");
+      const tabOrig = document.getElementById("tabOriginal");
+      const tabHeat = document.getElementById("tabGradcam");
+
+      if (mode === "gradcam" && currentGradcamSrc) {
+        img.src = currentGradcamSrc;
+        tabHeat.classList.add("active");
+        tabOrig.classList.remove("active");
+      } else {
+        img.src = currentOriginalSrc;
+        tabOrig.classList.add("active");
+        tabHeat.classList.remove("active");
+      }
+    }
+
+    function setPreview(src) {
+      const placeholder = document.getElementById("placeholder");
+      const img = document.getElementById("previewImg");
+      placeholder.style.display = "none";
+      img.style.display = "block";
+      img.src = src;
+    }
+
+    function showError(msg) {
+      const alert = document.getElementById("alertBox");
+      alert.textContent = msg;
+      alert.style.display = "block";
+    }
+
+    function clearError() {
+      const alert = document.getElementById("alertBox");
+      alert.style.display = "none";
+    }
+
+    function showSpinner(show) {
+      document.getElementById("spinner").style.display = show ? "block" : "none";
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+{
+  "validation_set": {
+    "samples": 1000,
+    "metrics": {
+      "confusion_matrix": {
+        "tp": 489,
+        "fp": 13,
+        "tn": 487,
+        "fn": 11
+      },
+      "accuracy": 0.976,
+      "precision": 0.9741,
+      "recall": 0.978,
+      "specificity": 0.974,
+      "f1_score": 0.976,
+      "total_samples": 1000
+    },
+    "confidence_interval_95": {
+      "low": 0.9645,
+      "high": 0.9838,
+      "margin_of_error": 0.0096
+    },
+    "roc_auc": 0.9952,
+    "expected_calibration_error": 0.0134
+  },
+  "test_set": {
+    "samples": 50,
+    "metrics": {
+      "confusion_matrix": {
+        "tp": 23,
+        "fp": 0,
+        "tn": 26,
+        "fn": 1
+      },
+      "accuracy": 0.98,
+      "precision": 1.0,
+      "recall": 0.9583,
+      "specificity": 1.0,
+      "f1_score": 0.9787,
+      "total_samples": 50
+    },
+    "confidence_interval_95": {
+      "low": 0.895,
+      "high": 0.9965,
+      "margin_of_error": 0.0507
+    }
+  },
+  "failure_analysis": [
+    {
+      "index": 26,
+      "filename": "32.jpg",
+      "true_label": "Dog",
+      "pred_label": "Cat",
+      "probability": 0.0607,
+      "confidence": 93.93
+    }
+  ]
+}

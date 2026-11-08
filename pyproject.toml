@@ -1,0 +1,146 @@
+# ===========================================================================
+# pyproject.toml — Modern Python packaging configuration
+#
+# Design decisions:
+# 1. We use the [project] table (PEP 621) instead of legacy setup.py for
+#    metadata, making the project pip-installable with `pip install -e .`.
+# 2. Dependencies are split into base (runtime) and optional groups (dev,
+#    test, web) so CI installs only what each job needs.
+# 3. Tool configurations (pytest, ruff, coverage) live here instead of
+#    scattered .ini / .cfg / .toml files — one file to rule them all.
+# ===========================================================================
+
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "catdog"
+version = "0.1.0"
+description = "Cat vs Dog Image Classifier — freeCodeCamp Machine Learning certification project"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.11"
+authors = [{name = "Student"}]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    "tensorflow>=2.16.0",
+    "numpy>=1.26.0",
+    "matplotlib>=3.8.0",
+    "Pillow>=10.0.0",
+]
+
+[project.optional-dependencies]
+# Testing: `pip install -e ".[test]"`
+test = [
+    "pytest>=8.0.0",
+    "pytest-cov>=5.0.0",
+    "coverage[toml]>=7.0",
+]
+# Web serving: `pip install -e ".[web]"`
+web = [
+    "fastapi>=0.100.0",
+    "uvicorn>=0.20.0",
+    "python-multipart>=0.0.6",
+    "gradio>=4.0.0",
+]
+# Development: `pip install -e ".[dev]"` (includes test + web + linting)
+dev = [
+    "catdog[test,web]",
+    "ruff>=0.4.0",
+]
+
+
+[project.scripts]
+catdog-predict = "catdog.predict:main"
+catdog-export  = "catdog.export:main"
+
+
+# ---------------------------------------------------------------------------
+# Tool: setuptools (src layout)
+# ---------------------------------------------------------------------------
+[tool.setuptools.packages.find]
+where = ["src"]
+
+
+# ---------------------------------------------------------------------------
+# Tool: pytest
+# ---------------------------------------------------------------------------
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = [
+    "-v",
+    "--tb=short",
+    "--strict-markers",
+]
+markers = [
+    "slow: marks tests that load full models or run inference (deselect with '-m \"not slow\"')",
+    "requires_model: marks tests that need a trained model file on disk",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::FutureWarning",
+]
+
+
+# ---------------------------------------------------------------------------
+# Tool: coverage
+# ---------------------------------------------------------------------------
+[tool.coverage.run]
+source = ["catdog"]
+omit = [
+    "*/test_*",
+    "*/__pycache__/*",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+fail_under = 60
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__",
+    "raise NotImplementedError",
+    "pass",
+]
+
+
+# ---------------------------------------------------------------------------
+# Tool: ruff (replaces flake8 + isort + pyupgrade)
+# ---------------------------------------------------------------------------
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "UP",   # pyupgrade
+    "B",    # flake8-bugbear
+    "SIM",  # flake8-simplify
+    "RUF",  # ruff-specific rules
+]
+ignore = [
+    "E501",   # line too long — handled by formatter
+    "B008",   # function-call-in-default-argument (FastAPI uses Depends())
+    "SIM108", # ternary — readability preference
+    "RUF012", # mutable-class-default — dataclass fields are fine
+    "UP007",  # Optional[X] vs X | None — keep Optional for TF compat
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["catdog"]

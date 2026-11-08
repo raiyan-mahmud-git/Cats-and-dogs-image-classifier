@@ -1,0 +1,33 @@
+{
+  "source_model": "E:\\cats_and_dogs\\models\\transfer_model.keras",
+  "exported_models": {
+    "tflite_float32": "E:\\cats_and_dogs\\models\\transfer_model_float32.tflite",
+    "tflite_float16": "E:\\cats_and_dogs\\models\\transfer_model_float16.tflite"
+  },
+  "benchmarks": [
+    {
+      "format": "transfer_model.keras",
+      "file_size_mb": 25.1,
+      "median_ms": 50.14,
+      "mean_ms": 50.42,
+      "min_ms": 45.29,
+      "max_ms": 69.47
+    },
+    {
+      "format": "transfer_model_float32.tflite",
+      "file_size_mb": 9.08,
+      "median_ms": 3.69,
+      "mean_ms": 3.7,
+      "min_ms": 3.14,
+      "max_ms": 4.91
+    },
+    {
+      "format": "transfer_model_float16.tflite",
+      "file_size_mb": 4.57,
+      "median_ms": 3.55,
+      "mean_ms": 3.55,
+      "min_ms": 3.08,
+      "max_ms": 4.38
+    }
+  ]
+}

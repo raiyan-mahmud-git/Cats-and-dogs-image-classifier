@@ -88,6 +88,29 @@ Data augmentation includes:
 
 
 
+## Web Demo & Deployment
+
+### Run Gradio Demo Locally
+```powershell
+python app.py
+```
+Visit `http://127.0.0.1:7860` in your browser.
+
+### Free Live Cloud Deployment to Hugging Face Spaces (No Docker Needed!)
+
+1. Create a free account at **[huggingface.co](https://huggingface.co)**.
+2. Click **"New Space"**:
+   * **Space SDK:** Select **Gradio**
+   * **Hardware:** Default free **2 vCPU • 16 GB RAM**
+3. Push your repository:
+   ```bash
+   git remote add space https://huggingface.co/spaces/<your-username>/<your-space-name>
+   git add .
+   git commit -m "Deploy Cat vs Dog AI to Hugging Face Spaces"
+   git push space main
+   ```
+4. Hugging Face automatically reads `app.py` and `requirements.txt` and deploys your live web demo with a public link and an auto-generated REST API!
+
 ## License
 
 This project is open-source and available for learning and personal use.

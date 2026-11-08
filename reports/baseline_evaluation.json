@@ -1,0 +1,511 @@
+{
+  "validation_loss": 0.5251810550689697,
+  "validation_accuracy": 0.734000027179718,
+  "test_total": 50,
+  "test_correct": 36,
+  "test_accuracy": 0.72,
+  "freecodecamp_pass_mark": 0.63,
+  "passed": true,
+  "per_image_results": [
+    {
+      "index": 1,
+      "filename": "1.jpg",
+      "dog_probability": 0.6952224969863892,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 1,
+      "ground_truth_label": "Dog",
+      "correct": true
+    },
+    {
+      "index": 2,
+      "filename": "10.jpg",
+      "dog_probability": 0.1983378529548645,
+      "predicted_class": 0,
+      "predicted_label": "Cat",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": true
+    },
+    {
+      "index": 3,
+      "filename": "11.jpg",
+      "dog_probability": 0.015167346224188805,
+      "predicted_class": 0,
+      "predicted_label": "Cat",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": true
+    },
+    {
+      "index": 4,
+      "filename": "12.jpg",
+      "dog_probability": 0.860744059085846,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 1,
+      "ground_truth_label": "Dog",
+      "correct": true
+    },
+    {
+      "index": 5,
+      "filename": "13.jpg",
+      "dog_probability": 0.5246829986572266,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": false
+    },
+    {
+      "index": 6,
+      "filename": "14.jpg",
+      "dog_probability": 0.5574760437011719,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": false
+    },
+    {
+      "index": 7,
+      "filename": "15.jpg",
+      "dog_probability": 0.9066088795661926,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": false
+    },
+    {
+      "index": 8,
+      "filename": "16.jpg",
+      "dog_probability": 0.11432178318500519,
+      "predicted_class": 0,
+      "predicted_label": "Cat",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": true
+    },
+    {
+      "index": 9,
+      "filename": "17.jpg",
+      "dog_probability": 0.6598262786865234,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 1,
+      "ground_truth_label": "Dog",
+      "correct": true
+    },
+    {
+      "index": 10,
+      "filename": "18.jpg",
+      "dog_probability": 0.9806782603263855,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 1,
+      "ground_truth_label": "Dog",
+      "correct": true
+    },
+    {
+      "index": 11,
+      "filename": "19.jpg",
+      "dog_probability": 0.14262664318084717,
+      "predicted_class": 0,
+      "predicted_label": "Cat",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": true
+    },
+    {
+      "index": 12,
+      "filename": "2.jpg",
+      "dog_probability": 0.813176155090332,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 1,
+      "ground_truth_label": "Dog",
+      "correct": true
+    },
+    {
+      "index": 13,
+      "filename": "20.jpg",
+      "dog_probability": 0.4304141402244568,
+      "predicted_class": 0,
+      "predicted_label": "Cat",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": true
+    },
+    {
+      "index": 14,
+      "filename": "21.jpg",
+      "dog_probability": 0.35602107644081116,
+      "predicted_class": 0,
+      "predicted_label": "Cat",
+      "ground_truth": 1,
+      "ground_truth_label": "Dog",
+      "correct": false
+    },
+    {
+      "index": 15,
+      "filename": "22.jpg",
+      "dog_probability": 0.5277479887008667,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": false
+    },
+    {
+      "index": 16,
+      "filename": "23.jpg",
+      "dog_probability": 0.7319599390029907,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 1,
+      "ground_truth_label": "Dog",
+      "correct": true
+    },
+    {
+      "index": 17,
+      "filename": "24.jpg",
+      "dog_probability": 0.7679482102394104,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 1,
+      "ground_truth_label": "Dog",
+      "correct": true
+    },
+    {
+      "index": 18,
+      "filename": "25.jpg",
+      "dog_probability": 0.9815546274185181,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": false
+    },
+    {
+      "index": 19,
+      "filename": "26.jpg",
+      "dog_probability": 0.63758784532547,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 1,
+      "ground_truth_label": "Dog",
+      "correct": true
+    },
+    {
+      "index": 20,
+      "filename": "27.jpg",
+      "dog_probability": 0.7680173516273499,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 1,
+      "ground_truth_label": "Dog",
+      "correct": true
+    },
+    {
+      "index": 21,
+      "filename": "28.jpg",
+      "dog_probability": 0.1449551284313202,
+      "predicted_class": 0,
+      "predicted_label": "Cat",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": true
+    },
+    {
+      "index": 22,
+      "filename": "29.jpg",
+      "dog_probability": 0.46674644947052,
+      "predicted_class": 0,
+      "predicted_label": "Cat",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": true
+    },
+    {
+      "index": 23,
+      "filename": "3.jpg",
+      "dog_probability": 0.45162487030029297,
+      "predicted_class": 0,
+      "predicted_label": "Cat",
+      "ground_truth": 1,
+      "ground_truth_label": "Dog",
+      "correct": false
+    },
+    {
+      "index": 24,
+      "filename": "30.jpg",
+      "dog_probability": 0.5013782382011414,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 1,
+      "ground_truth_label": "Dog",
+      "correct": true
+    },
+    {
+      "index": 25,
+      "filename": "31.jpg",
+      "dog_probability": 0.8278921842575073,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 1,
+      "ground_truth_label": "Dog",
+      "correct": true
+    },
+    {
+      "index": 26,
+      "filename": "32.jpg",
+      "dog_probability": 0.40078988671302795,
+      "predicted_class": 0,
+      "predicted_label": "Cat",
+      "ground_truth": 1,
+      "ground_truth_label": "Dog",
+      "correct": false
+    },
+    {
+      "index": 27,
+      "filename": "33.jpg",
+      "dog_probability": 0.5492334365844727,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 1,
+      "ground_truth_label": "Dog",
+      "correct": true
+    },
+    {
+      "index": 28,
+      "filename": "34.jpg",
+      "dog_probability": 0.2889070212841034,
+      "predicted_class": 0,
+      "predicted_label": "Cat",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": true
+    },
+    {
+      "index": 29,
+      "filename": "35.jpg",
+      "dog_probability": 0.18711639940738678,
+      "predicted_class": 0,
+      "predicted_label": "Cat",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": true
+    },
+    {
+      "index": 30,
+      "filename": "36.jpg",
+      "dog_probability": 0.6925759315490723,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": false
+    },
+    {
+      "index": 31,
+      "filename": "37.jpg",
+      "dog_probability": 0.34442421793937683,
+      "predicted_class": 0,
+      "predicted_label": "Cat",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": true
+    },
+    {
+      "index": 32,
+      "filename": "38.jpg",
+      "dog_probability": 0.1366502195596695,
+      "predicted_class": 0,
+      "predicted_label": "Cat",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": true
+    },
+    {
+      "index": 33,
+      "filename": "39.jpg",
+      "dog_probability": 0.8903149962425232,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 1,
+      "ground_truth_label": "Dog",
+      "correct": true
+    },
+    {
+      "index": 34,
+      "filename": "4.jpg",
+      "dog_probability": 0.9966962933540344,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 1,
+      "ground_truth_label": "Dog",
+      "correct": true
+    },
+    {
+      "index": 35,
+      "filename": "40.jpg",
+      "dog_probability": 0.42723333835601807,
+      "predicted_class": 0,
+      "predicted_label": "Cat",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": true
+    },
+    {
+      "index": 36,
+      "filename": "41.jpg",
+      "dog_probability": 0.9069334268569946,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 1,
+      "ground_truth_label": "Dog",
+      "correct": true
+    },
+    {
+      "index": 37,
+      "filename": "42.jpg",
+      "dog_probability": 0.9963838458061218,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 1,
+      "ground_truth_label": "Dog",
+      "correct": true
+    },
+    {
+      "index": 38,
+      "filename": "43.jpg",
+      "dog_probability": 0.9109919667243958,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 1,
+      "ground_truth_label": "Dog",
+      "correct": true
+    },
+    {
+      "index": 39,
+      "filename": "44.jpg",
+      "dog_probability": 0.3273906111717224,
+      "predicted_class": 0,
+      "predicted_label": "Cat",
+      "ground_truth": 1,
+      "ground_truth_label": "Dog",
+      "correct": false
+    },
+    {
+      "index": 40,
+      "filename": "45.jpg",
+      "dog_probability": 0.506991982460022,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": false
+    },
+    {
+      "index": 41,
+      "filename": "46.jpg",
+      "dog_probability": 0.2480369359254837,
+      "predicted_class": 0,
+      "predicted_label": "Cat",
+      "ground_truth": 1,
+      "ground_truth_label": "Dog",
+      "correct": false
+    },
+    {
+      "index": 42,
+      "filename": "47.jpg",
+      "dog_probability": 0.24365361034870148,
+      "predicted_class": 0,
+      "predicted_label": "Cat",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": true
+    },
+    {
+      "index": 43,
+      "filename": "48.jpg",
+      "dog_probability": 0.9425972104072571,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 1,
+      "ground_truth_label": "Dog",
+      "correct": true
+    },
+    {
+      "index": 44,
+      "filename": "49.jpg",
+      "dog_probability": 0.6920000314712524,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 1,
+      "ground_truth_label": "Dog",
+      "correct": true
+    },
+    {
+      "index": 45,
+      "filename": "5.jpg",
+      "dog_probability": 0.21888482570648193,
+      "predicted_class": 0,
+      "predicted_label": "Cat",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": true
+    },
+    {
+      "index": 46,
+      "filename": "50.jpg",
+      "dog_probability": 0.5568997859954834,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": false
+    },
+    {
+      "index": 47,
+      "filename": "6.jpg",
+      "dog_probability": 0.6851722598075867,
+      "predicted_class": 1,
+      "predicted_label": "Dog",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": false
+    },
+    {
+      "index": 48,
+      "filename": "7.jpg",
+      "dog_probability": 0.06337982416152954,
+      "predicted_class": 0,
+      "predicted_label": "Cat",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": true
+    },
+    {
+      "index": 49,
+      "filename": "8.jpg",
+      "dog_probability": 0.39070701599121094,
+      "predicted_class": 0,
+      "predicted_label": "Cat",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": true
+    },
+    {
+      "index": 50,
+      "filename": "9.jpg",
+      "dog_probability": 0.189966082572937,
+      "predicted_class": 0,
+      "predicted_label": "Cat",
+      "ground_truth": 0,
+      "ground_truth_label": "Cat",
+      "correct": true
+    }
+  ]
+}

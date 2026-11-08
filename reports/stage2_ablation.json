@@ -1,0 +1,36 @@
+{
+  "ablation_results": [
+    {
+      "variant": "0. Baseline CNN (Stage 1)",
+      "parameters": 19034177,
+      "epochs_trained": 20,
+      "val_loss": 0.5252,
+      "val_accuracy": 73.4,
+      "test_accuracy": 72.0
+    },
+    {
+      "variant": "1. + GlobalAveragePooling2D",
+      "parameters": 421441,
+      "epochs_trained": 20,
+      "val_loss": 0.6489,
+      "val_accuracy": 61.5,
+      "test_accuracy": 58.0
+    },
+    {
+      "variant": "2. + BatchNormalization",
+      "parameters": 423265,
+      "epochs_trained": 20,
+      "val_loss": 0.694,
+      "val_accuracy": 61.8,
+      "test_accuracy": 76.0
+    },
+    {
+      "variant": "3. + Callbacks & LR Scheduling (Tuned)",
+      "parameters": 423265,
+      "epochs_trained": 11,
+      "val_loss": 0.7434,
+      "val_accuracy": 50.0,
+      "test_accuracy": 52.0
+    }
+  ]
+}

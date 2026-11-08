@@ -1,0 +1,11 @@
+{
+  "model_name": "MobileNetV2 (Transfer + Fine-Tuned)",
+  "total_parameters": 2422081,
+  "model_size_mb": 25.1,
+  "training_time_seconds": 276.1,
+  "validation_loss": 0.0735,
+  "validation_accuracy": 97.6,
+  "test_accuracy": 98.0,
+  "test_correct": 49,
+  "test_total": 50
+}

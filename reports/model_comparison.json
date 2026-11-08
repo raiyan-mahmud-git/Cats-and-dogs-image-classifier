@@ -1,0 +1,26 @@
+[
+  {
+    "stage": "Stage 1: Scratch Baseline CNN",
+    "architecture": "3x Conv + Flatten + Dense 512",
+    "parameters": 19034177,
+    "disk_size_mb": 217.89,
+    "val_accuracy": 73.4,
+    "test_accuracy": 72.0
+  },
+  {
+    "stage": "Stage 2: Modern Scratch CNN",
+    "architecture": "4x Conv + BN + GAP + Dense 128",
+    "parameters": 423265,
+    "disk_size_mb": 4.94,
+    "val_accuracy": 61.8,
+    "test_accuracy": 76.0
+  },
+  {
+    "stage": "Stage 3: Transfer Learning",
+    "architecture": "Pretrained MobileNetV2 + Fine-Tuned Head",
+    "parameters": 2422081,
+    "disk_size_mb": 25.1,
+    "val_accuracy": 97.6,
+    "test_accuracy": 98.0
+  }
+]
