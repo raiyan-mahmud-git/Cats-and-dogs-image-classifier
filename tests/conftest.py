@@ -1,16 +1,4 @@
-"""
-tests/conftest.py
-Shared test fixtures and configuration.
-
-Design decisions:
-1. The `tiny_model` fixture builds a minimal 2-layer CNN (~1K params) that follows
-   the same interface as our production models (Input → Rescaling → Conv → GAP → Dense(1)).
-   This lets tests verify prediction pipelines WITHOUT the 25 MB trained model.
-2. The `tmp_images` fixture creates a reusable set of edge-case images (RGB, gray,
-   RGBA, corrupt, empty) used across multiple test modules.
-3. We register `requires_model` and `slow` markers so tests can be filtered:
-   `pytest -m "not slow"` runs the fast unit-only suite in ~3 seconds.
-"""
+"""Shared test fixtures and configuration."""
 
 import sys
 from pathlib import Path
@@ -20,9 +8,11 @@ import pytest
 # ---------------------------------------------------------------------------
 # Ensure src/ is on the Python path (for non-editable-install workflows)
 # ---------------------------------------------------------------------------
-SRC_DIR = Path(__file__).resolve().parents[1] / "src"
-if str(SRC_DIR) not in sys.path:
-    sys.path.insert(0, str(SRC_DIR))
+ROOT_DIR = Path(__file__).resolve().parents[1]
+SRC_DIR = ROOT_DIR / "src"
+for d in (ROOT_DIR, SRC_DIR):
+    if str(d) not in sys.path:
+        sys.path.insert(0, str(d))
 
 
 # ---------------------------------------------------------------------------

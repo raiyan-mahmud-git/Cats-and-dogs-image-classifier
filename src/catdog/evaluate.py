@@ -13,13 +13,7 @@ def evaluate_baseline(
     config: Optional[Config] = None,
     model: Optional[tf.keras.Model] = None,
 ) -> Dict[str, Any]:
-    """Evaluate baseline model on both validation data and the 50-image test set.
-
-    Design explanation:
-    We compute honest, verifiable metrics on validation and the official test set.
-    Predictions are aligned with filenames to verify ground-truth indexing, and
-    per-image classifications are recorded in a structured report.
-    """
+    """Evaluate baseline model on both validation data and the 50-image test set."""
     if config is None:
         config = Config()
 

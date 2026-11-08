@@ -1,23 +1,4 @@
-"""
-src/catdog/predict.py
-Production-grade inference module with CLI entry point.
-
-Features:
-- Single image prediction: `python -m catdog.predict image.jpg`
-- Batch folder mode:       `python -m catdog.predict folder/ --csv results.csv`
-- Robust input validation: gracefully handles non-images, corrupt files,
-  grayscale, RGBA (4-channel), and excessively large files.
-- Supports both .keras and .tflite model formats.
-
-Design decisions:
-1. All image preprocessing (resize, channel conversion) lives in one
-   `_load_and_validate_image` function so the CLI, web app, and tests
-   all share exactly the same pipeline.
-2. We cap file size at 20 MB to prevent accidental memory exhaustion
-   from misplaced video files or archives.
-3. Grayscale images are replicated to 3 channels and RGBA images have
-   their alpha channel stripped, because MobileNetV2 expects RGB input.
-"""
+"""Production inference module and CLI entry point."""
 
 import argparse
 import csv
@@ -141,12 +122,7 @@ def _load_and_validate_image(
 # Predictor
 # ---------------------------------------------------------------------------
 class CatDogPredictor:
-    """Unified predictor supporting both .keras and .tflite models.
-
-    Design decision: We auto-detect the model format from the file extension.
-    TFLite inference uses the lightweight `tf.lite.Interpreter` which avoids
-    loading the full Keras graph — critical for edge deployment and benchmarking.
-    """
+    """Unified predictor supporting both .keras and .tflite models."""
 
     def __init__(
         self,

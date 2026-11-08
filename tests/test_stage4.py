@@ -1,4 +1,4 @@
-"""Unit tests for Stage 4 metrics, confidence intervals, and Grad-CAM generation."""
+"""Unit tests for evaluation metrics, confidence intervals, and Grad-CAM generation."""
 
 import sys
 from pathlib import Path

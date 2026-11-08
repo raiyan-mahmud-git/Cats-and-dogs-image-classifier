@@ -13,16 +13,7 @@ def get_training_callbacks(
     early_stopping_patience: int = 10,
     reduce_lr_patience: int = 4,
 ) -> List[tf.keras.callbacks.Callback]:
-    """Build callbacks for adaptive training, checkpointing, and telemetry.
-
-    Design explanation:
-    - `EarlyStopping`: Halts training when validation metric stops improving. We use a generous
-      patience (10 epochs) because networks with BatchNormalization require 5-8 epochs for running
-      mean and variance statistics to stabilize on small datasets before validation loss steadily drops.
-    - `ModelCheckpoint`: Automatically saves only the best performing `.keras` model based on validation accuracy.
-    - `ReduceLROnPlateau`: Cuts learning rate by 50% when progress stalls, allowing fine-grained convergence.
-    - `TensorBoard`: Logs scalar metrics, learning rates, and computational graphs for visual inspection.
-    """
+    """Build callbacks for adaptive training, checkpointing, and telemetry."""
     checkpoint_path = config.models_dir / f"{experiment_name}.keras"
     tensorboard_log_dir = config.reports_dir / "tensorboard" / experiment_name
 

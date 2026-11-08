@@ -1,7 +1,4 @@
-"""
-tests/test_stage6.py
-Tests for Stage 6: Web Demo (FastAPI REST API & Gradio application).
-"""
+"""Unit tests for FastAPI REST API and web application."""
 
 import io
 import pytest

@@ -1,15 +1,3 @@
-# ===========================================================================
-# pyproject.toml — Modern Python packaging configuration
-#
-# Design decisions:
-# 1. We use the [project] table (PEP 621) instead of legacy setup.py for
-#    metadata, making the project pip-installable with `pip install -e .`.
-# 2. Dependencies are split into base (runtime) and optional groups (dev,
-#    test, web) so CI installs only what each job needs.
-# 3. Tool configurations (pytest, ruff, coverage) live here instead of
-#    scattered .ini / .cfg / .toml files — one file to rule them all.
-# ===========================================================================
-
 [build-system]
 requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"

@@ -1,14 +1,4 @@
-"""
-tests/test_stage7.py
-Tests for Stage 7: Modern Packaging, CI/CD Pipeline & Fast Testing Fixtures.
-
-Covers:
-- pyproject.toml configuration validity (PEP 621, tool configs, entry points)
-- GitHub Actions CI workflow structure and matrix definition
-- Lightweight dummy model fixture functionality (CI without 25MB weights)
-- Predictor inference with dummy models
-- Package versioning and entry point discovery
-"""
+"""Unit tests for packaging configuration, CI/CD, and fast test fixtures."""
 
 from pathlib import Path
 import tomllib

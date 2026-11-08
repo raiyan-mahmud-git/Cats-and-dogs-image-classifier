@@ -1,4 +1,4 @@
-"""Comprehensive Stage 4 evaluation suite: metrics, ROC-AUC, calibration, and Grad-CAM gallery."""
+"""Comprehensive evaluation suite: metrics, ROC-AUC, calibration, and Grad-CAM gallery."""
 
 import json
 from pathlib import Path
@@ -27,16 +27,16 @@ from catdog.metrics import (
 
 
 def run_comprehensive_evaluation(config: Config = None) -> Dict[str, Any]:
-    """Execute complete Stage 4 diagnostic evaluation suite."""
+    """Execute complete diagnostic evaluation suite."""
     if config is None:
         config = Config()
 
     model_path = config.models_dir / "transfer_model.keras"
     if not model_path.exists():
-        raise FileNotFoundError(f"Transfer model not found at {model_path}. Run Stage 3 first.")
+        raise FileNotFoundError(f"Transfer model not found at {model_path}.")
 
     print("=" * 65)
-    print("STAGE 4: COMPREHENSIVE EVALUATION & EXPLAINABILITY")
+    print("COMPREHENSIVE EVALUATION & EXPLAINABILITY")
     print("=" * 65)
 
     model = tf.keras.models.load_model(model_path)
@@ -204,7 +204,7 @@ def run_comprehensive_evaluation(config: Config = None) -> Dict[str, Any]:
     report_path = config.reports_dir / "stage4_evaluation_report.json"
     with open(report_path, "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2)
-    print(f"\n[Report] Stage 4 Full Diagnostic Report saved to: {report_path}")
+    print(f"\n[Report] Diagnostic Report saved to: {report_path}")
 
     return report
 

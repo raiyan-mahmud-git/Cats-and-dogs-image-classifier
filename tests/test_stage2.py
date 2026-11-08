@@ -1,4 +1,4 @@
-"""Unit tests for Stage 2 architectural improvements and callbacks."""
+"""Unit tests for CNN architecture and callbacks."""
 
 import sys
 from pathlib import Path

@@ -13,12 +13,7 @@ from catdog.model import build_baseline_model
 
 
 def plot_and_save_training_curves(history: Dict[str, Any], output_path: Path) -> None:
-    """Plot and save training and validation loss and accuracy curves.
-
-    Design explanation:
-    Comparing train vs validation curves across all epochs visually diagnoses
-    overfitting, learning plateaus, and training stability without guessing.
-    """
+    """Plot and save training and validation loss and accuracy curves."""
     acc = history["accuracy"]
     val_acc = history["val_accuracy"]
     loss = history["loss"]
@@ -56,7 +51,7 @@ def train_baseline(config: Config = None) -> tf.keras.Model:
         config = Config()
 
     print("=" * 60)
-    print("STAGE 1: TRAINING BASELINE CNN")
+    print("TRAINING BASELINE CNN")
     print(f"Batch size: {config.batch_size} | Epochs: {config.epochs} | Seed: {config.seed}")
     print("=" * 60)
 

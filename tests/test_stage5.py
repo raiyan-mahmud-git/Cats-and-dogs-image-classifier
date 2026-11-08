@@ -1,13 +1,4 @@
-"""
-tests/test_stage5.py
-Tests for Stage 5: Packaging & Inference.
-
-Covers:
-- Image validation (good files, bad extensions, corrupt files, RGBA, grayscale)
-- CatDogPredictor with the real transfer model
-- TFLite export and inference
-- CLI argument parsing
-"""
+"""Unit tests for packaging and inference."""
 
 import numpy as np
 import pytest

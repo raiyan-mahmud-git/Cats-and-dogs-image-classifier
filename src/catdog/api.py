@@ -1,21 +1,4 @@
-"""
-src/catdog/api.py
-FastAPI production REST API for Cat vs Dog image classification.
-
-Endpoints:
-- `POST /api/predict`     Multipart image upload, returns JSON predictions & optional Grad-CAM.
-- `GET  /api/health`      Health check with active model metadata and runtime info.
-- `GET  /api/sample/{id}` Serves sample benchmark images for one-click testing.
-- `GET  /`                Serves the responsive single-page web app.
-
-Design decisions:
-1. File size is strictly enforced before full buffer buffering (rejecting >20 MB with HTTP 413),
-   preventing memory exhaustion attacks from malicious or accidental payload dumps.
-2. The endpoint supports an `explain=true` query parameter, decoupling fast classification
-   (<10 ms) from heavier gradient-based saliency mapping (~50 ms) to keep the default API fast.
-3. FastAPI's OpenAPI integration generates interactive Swagger UI documentation at `/docs`,
-   making the API immediately discoverable for frontend developers and recruiters.
-"""
+"""FastAPI REST API for Cat vs Dog image classification."""
 
 import base64
 import io

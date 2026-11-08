@@ -7,13 +7,7 @@ from catdog.config import Config
 
 
 def build_data_augmentation_layer() -> layers.Layer:
-    """Build in-model data augmentation pipeline.
-
-    Design explanation:
-    Placing augmentation layers inside the Keras model ensures transformations run
-    efficiently on the computation device (GPU/CPU) during training (`training=True`)
-    and automatically deactivate during validation and inference (`training=False`).
-    """
+    """Build in-model data augmentation pipeline."""
     return models.Sequential(
         [
             layers.RandomFlip("horizontal", name="aug_flip"),
@@ -69,13 +63,7 @@ def build_baseline_model(config: Config) -> models.Model:
 
 
 def build_gap_model(config: Config) -> models.Model:
-    """Ablation Variant 1: Baseline replaced with GlobalAveragePooling2D.
-
-    Design explanation:
-    Replacing the 19M-parameter Flatten+Dense layer with GlobalAveragePooling2D
-    shrinks spatial feature maps into channel averages, dropping parameter count
-    from ~19,000,000 down to ~421,000 without sacrificing representational capacity.
-    """
+    """CNN variant using GlobalAveragePooling2D instead of Flatten."""
     inputs = layers.Input(
         shape=(config.img_height, config.img_width, config.channels),
         name="image_input",
@@ -116,13 +104,7 @@ def build_improved_cnn(
     l2_reg: float = 1e-4,
     dropout_rate: float = 0.3,
 ) -> models.Model:
-    """Stage 2: Production-grade from-scratch CNN.
-
-    Design explanation:
-    Uses `use_bias=False` Conv2D followed by `BatchNormalization` to stabilize internal
-    feature distributions and accelerate convergence. Spatial maps are pooled via
-    `GlobalAveragePooling2D`, and mild L2 regularization with tuned Dropout prevents overfitting.
-    """
+    """Production from-scratch CNN with BatchNormalization and GlobalAveragePooling."""
     inputs = layers.Input(
         shape=(config.img_height, config.img_width, config.channels),
         name="image_input",
@@ -174,13 +156,7 @@ def build_transfer_model(
     config: Config,
     learning_rate: float = 1e-3,
 ) -> models.Model:
-    """Stage 3: Pretrained MobileNetV2 Transfer Learning Model.
-
-    Design explanation:
-    Pretrained MobileNetV2 requires inputs normalized to [-1, 1] (via `Rescaling(1/127.5, offset=-1.0)`).
-    The base feature extractor is initially frozen (`trainable=False`), and called with `training=False`
-    so its internal BatchNormalization layers preserve ImageNet running statistics during training.
-    """
+    """Pretrained MobileNetV2 transfer learning model."""
     inputs = layers.Input(
         shape=(config.img_height, config.img_width, config.channels),
         name="image_input",

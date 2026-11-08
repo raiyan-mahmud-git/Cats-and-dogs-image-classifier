@@ -1,4 +1,4 @@
-"""Unit tests for Stage 3 transfer learning architecture and fine-tuning logic."""
+"""Unit tests for transfer learning architecture and fine-tuning logic."""
 
 import sys
 from pathlib import Path

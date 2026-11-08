@@ -18,12 +18,7 @@ def plot_transfer_history(
     history_phase2: Dict[str, list],
     output_path: Path,
 ) -> None:
-    """Plot stitched Phase 1 (frozen) and Phase 2 (fine-tuning) learning curves.
-
-    Design explanation:
-    Visualizing both phases continuously illustrates the transition from feature extraction
-    to delicate fine-tuning, highlighting the subsequent accuracy jump.
-    """
+    """Plot stitched Phase 1 (frozen) and Phase 2 (fine-tuning) learning curves."""
     acc = history_phase1["accuracy"] + history_phase2["accuracy"]
     val_acc = history_phase1["val_accuracy"] + history_phase2["val_accuracy"]
     loss = history_phase1["loss"] + history_phase2["loss"]
@@ -72,7 +67,7 @@ def train_transfer_learning(
         config = Config()
 
     print("=" * 65)
-    print("STAGE 3: TRANSFER LEARNING (MobileNetV2)")
+    print("TRANSFER LEARNING (MobileNetV2)")
     print("=" * 65)
 
     set_seed(config.seed)
@@ -174,7 +169,7 @@ def train_transfer_learning(
     test_acc = correct_count / len(truth)
 
     print("\n" + "=" * 65)
-    print("STAGE 3 TRANSFER LEARNING RESULTS")
+    print("TRANSFER LEARNING RESULTS")
     print(f"Validation Loss:     {val_loss:.4f}")
     print(f"Validation Accuracy: {val_acc * 100:.2f}%")
     print(f"Test Accuracy:       {test_acc * 100:.2f}% ({correct_count}/{len(truth)})")
@@ -212,7 +207,7 @@ def train_transfer_learning(
 
 
 def save_model_comparison_table(config: Config, transfer_results: Dict[str, Any]) -> None:
-    """Consolidate Stage 1, Stage 2, and Stage 3 metrics into one comparison table."""
+    """Consolidate metrics across models into a comparison table."""
     # Read Stage 1
     baseline_eval_p = config.reports_dir / "baseline_evaluation.json"
     s1_val_acc = 73.4

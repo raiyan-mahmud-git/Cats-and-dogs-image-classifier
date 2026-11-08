@@ -83,7 +83,7 @@ def run_all_ablations(config: Config = None) -> Dict[str, Any]:
     if config is None:
         config = Config()
 
-    # Load baseline from Stage 1 if available to avoid redundant re-training
+    # Load baseline evaluation if available to avoid redundant re-training
     baseline_eval_path = config.reports_dir / "baseline_evaluation.json"
     baseline_history_path = config.reports_dir / "baseline_history.json"
 
@@ -94,7 +94,7 @@ def run_all_ablations(config: Config = None) -> Dict[str, Any]:
             b_hist = json.load(f)
 
         baseline_result = {
-            "variant": "0. Baseline CNN (Stage 1)",
+            "variant": "0. Baseline CNN",
             "parameters": 19034177,
             "epochs_trained": len(b_hist["loss"]),
             "final_val_loss": b_eval["validation_loss"],
@@ -104,7 +104,7 @@ def run_all_ablations(config: Config = None) -> Dict[str, Any]:
         }
     else:
         baseline_result, _ = run_ablation_experiment(
-            "0. Baseline CNN (Stage 1)",
+            "0. Baseline CNN",
             build_baseline_model,
             epochs=config.epochs,
             config=config,

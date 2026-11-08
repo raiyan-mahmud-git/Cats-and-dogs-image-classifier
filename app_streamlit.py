@@ -1,19 +1,7 @@
-"""
-app_streamlit.py
-Production Streamlit Application for Cat vs Dog AI Vision.
-
-Features:
-- 100% cloud-ready for Streamlit Community Cloud (share.streamlit.io) — 100% free hosting.
-- Model format selector: TFLite (Float16 quantized, Float32) and Keras (Deep Feature Head).
-- Instant inference caching with `@st.cache_resource`.
-- Single-image interactive inspection with Grad-CAM salience attention maps.
-- Batch image upload tab with tabular metrics and CSV export.
-- Quick-test gallery for 1-click sample benchmarking.
-"""
+"""Streamlit dashboard for Cat vs Dog image classification with Grad-CAM."""
 
 import io
 import sys
-import time
 from pathlib import Path
 
 import numpy as np
@@ -33,7 +21,6 @@ from catdog.predict import (
     MAX_FILE_SIZE_BYTES,
     MAX_FILE_SIZE_MB,
     CatDogPredictor,
-    ImageValidationError,
     _load_and_validate_image,
 )
 
@@ -89,6 +76,7 @@ st.markdown(
 )
 
 config = Config()
+
 
 # ---------------------------------------------------------------------------
 # Cached Model Loaders
@@ -183,7 +171,9 @@ with tab1:
 
     with col_input:
         st.subheader("1. Provide Image")
-        source_mode = st.radio("Choose input method:", ["Upload Image", "Pick Sample from Benchmark"], horizontal=True)
+        source_mode = st.radio(
+            "Choose input method:", ["Upload Image", "Pick Sample from Benchmark"], horizontal=True
+        )
 
         input_image_path = None
         input_pil_img = None
@@ -214,7 +204,9 @@ with tab1:
                 "Sample 4 (Cat)": "4.jpg",
                 "Sample 32 (Tricky Dog)": "32.jpg",
             }
-            sample_choice = st.selectbox("Select sample benchmark image:", list(sample_options.keys()))
+            sample_choice = st.selectbox(
+                "Select sample benchmark image:", list(sample_options.keys())
+            )
             sample_file = config.test_dir / sample_options[sample_choice]
             if sample_file.exists():
                 input_image_path = sample_file
@@ -224,7 +216,11 @@ with tab1:
                 st.warning(f"Sample {sample_file.name} not found in test directory.")
 
         if input_pil_img is not None:
-            st.image(input_pil_img, caption=f"{image_name} ({input_pil_img.size[0]}×{input_pil_img.size[1]})", use_container_width=True)
+            st.image(
+                input_pil_img,
+                caption=f"{image_name} ({input_pil_img.size[0]}×{input_pil_img.size[1]})",
+                use_container_width=True,
+            )
 
     with col_result:
         st.subheader("2. AI Prediction & Insights")
@@ -258,7 +254,9 @@ with tab1:
                     keras_model = load_keras_explain_model()
                     if keras_model is not None:
                         with st.spinner("Computing class activation gradients..."):
-                            raw_arr = _load_and_validate_image(input_image_path, target_size=(config.img_height, config.img_width))
+                            raw_arr = _load_and_validate_image(
+                                input_image_path, target_size=(config.img_height, config.img_width)
+                            )
                             heatmap = generate_gradcam_heatmap(keras_model, raw_arr)
                             overlay = superimpose_gradcam(
                                 raw_arr.astype(np.uint8),
@@ -269,9 +267,18 @@ with tab1:
 
                             g1, g2 = st.columns(2)
                             with g1:
-                                st.image(overlay, caption="Grad-CAM Focus Overlay", use_container_width=True)
+                                st.image(
+                                    overlay,
+                                    caption="Grad-CAM Focus Overlay",
+                                    use_container_width=True,
+                                )
                             with g2:
-                                st.image(heatmap, caption="Raw 2D Attention Map", clamp=True, use_container_width=True)
+                                st.image(
+                                    heatmap,
+                                    caption="Raw 2D Attention Map",
+                                    clamp=True,
+                                    use_container_width=True,
+                                )
 
                             st.caption(
                                 "💡 **How to interpret:** Bright warm regions (red/yellow in 'jet') highlight spatial features "
@@ -294,7 +301,9 @@ with tab1:
 # ---------------------------------------------------------------------------
 with tab2:
     st.subheader("📁 Batch File Processing")
-    st.write("Upload a collection of images to classify them simultaneously and export structured results.")
+    st.write(
+        "Upload a collection of images to classify them simultaneously and export structured results."
+    )
 
     batch_files = st.file_uploader(
         "Upload multiple images",
@@ -317,26 +326,32 @@ with tab2:
 
             try:
                 r = predictor.predict_image(tmp_p)
-                records.append({
-                    "Image Name": f.name,
-                    "Prediction": r["label"],
-                    "Confidence (%)": r["confidence_pct"],
-                    "P(Dog)": r["dog_probability"],
-                    "Latency (ms)": r["time_ms"],
-                })
+                records.append(
+                    {
+                        "Image Name": f.name,
+                        "Prediction": r["label"],
+                        "Confidence (%)": r["confidence_pct"],
+                        "P(Dog)": r["dog_probability"],
+                        "Latency (ms)": r["time_ms"],
+                    }
+                )
             except Exception as ex:
-                records.append({
-                    "Image Name": f.name,
-                    "Prediction": "ERROR",
-                    "Confidence (%)": 0.0,
-                    "P(Dog)": 0.0,
-                    "Latency (ms)": 0.0,
-                    "Error": str(ex),
-                })
+                records.append(
+                    {
+                        "Image Name": f.name,
+                        "Prediction": "ERROR",
+                        "Confidence (%)": 0.0,
+                        "P(Dog)": 0.0,
+                        "Latency (ms)": 0.0,
+                        "Error": str(ex),
+                    }
+                )
             finally:
                 tmp_p.unlink(missing_ok=True)
 
-            progress_bar.progress((i + 1) / len(batch_files), text=f"Processed {i + 1}/{len(batch_files)} images...")
+            progress_bar.progress(
+                (i + 1) / len(batch_files), text=f"Processed {i + 1}/{len(batch_files)} images..."
+            )
 
         df = pd.DataFrame(records)
         st.success(f"Successfully processed {len(records)} images!")

@@ -1,23 +1,4 @@
-"""
-app.py
-Hugging Face Spaces entrypoint: Gradio Web Demonstration.
-
-Features:
-- Drag-and-drop image upload with clipboard support
-- Live class probability breakdown (Cat vs Dog)
-- Real-time Grad-CAM visual explainability overlay
-- Preloaded sample benchmark images for 1-click testing
-- Production model card & architectural context
-- Automatic Hugging Face REST API integration
-
-Design decisions:
-1. Gradio is the gold standard for ML portfolio demonstrations because it runs
-   locally and deploys to Hugging Face Spaces with zero configuration changes.
-2. We load the model once into memory at application startup, avoiding per-request
-   graph reconstruction and reducing prediction latency to milliseconds.
-3. Grad-CAM computation is optional via a checkbox, allowing users to choose between
-   instant classification (<10 ms) and visual explainability (~50 ms).
-"""
+"""Gradio web application for Cat vs Dog image classification."""
 
 import sys
 from pathlib import Path
@@ -139,13 +120,14 @@ def build_gradio_app() -> gr.Blocks:
             if p.exists():
                 sample_images.append([str(p), True])
 
-    theme = gr.themes.Soft(
-        primary_hue="blue",
-        secondary_hue="amber",
-        neutral_hue="slate",
-    )
-
-    with gr.Blocks(title="Cat vs Dog AI Classifier") as demo:
+    with gr.Blocks(
+        theme=gr.themes.Soft(
+            primary_hue="blue",
+            secondary_hue="amber",
+            neutral_hue="slate",
+        ),
+        title="Cat vs Dog AI Classifier",
+    ) as demo:
         gr.Markdown(
             """
             # 🐾 Cat vs Dog Image Classifier

@@ -12,13 +12,7 @@ from catdog.config import Config
 
 
 def set_seed(seed: int = 42) -> None:
-    """Set global seeds for Python, NumPy, and TensorFlow for reproducibility.
-
-    Design explanation:
-    Machine learning experiments must be reproducible. Setting random seeds across
-    Python's internal random, NumPy, and TensorFlow guarantees deterministic data
-    shuffling, weight initialization, and dataset batching.
-    """
+    """Set global seeds for Python, NumPy, and TensorFlow for reproducibility."""
     os.environ["PYTHONHASHSEED"] = str(seed)
     random.seed(seed)
     np.random.seed(seed)
@@ -28,14 +22,7 @@ def set_seed(seed: int = 42) -> None:
 def load_train_val_datasets(
     config: Config,
 ) -> Tuple[tf.data.Dataset, tf.data.Dataset]:
-    """Load train and validation datasets with cache and prefetch optimizations.
-
-    Design explanation:
-    `image_dataset_from_directory` replaces the deprecated `ImageDataGenerator`,
-    returning a modern `tf.data.Dataset`. Chaining `.cache()` stores decoded images
-    in memory after the first epoch, and `.prefetch(AUTOTUNE)` overlaps data
-    loading on CPU while the model computes on GPU/CPU, preventing I/O bottlenecks.
-    """
+    """Load train and validation datasets with cache and prefetch optimizations."""
     if not config.train_dir.exists():
         raise FileNotFoundError(f"Training directory not found at: {config.train_dir}")
     if not config.validation_dir.exists():
@@ -66,14 +53,7 @@ def load_train_val_datasets(
 
 
 def load_test_dataset(config: Config) -> Tuple[tf.data.Dataset, List[Path]]:
-    """Load the flat unlabelled test images deterministically.
-
-    Design explanation:
-    The test set contains 50 flat image files without class subfolders.
-    Instead of brittle workarounds, we directly read files using `tf.io`
-    sorted in lexicographical order (to match freeCodeCamp's ground truth answer key)
-    and assert exact count equality to avoid silent zip truncations.
-    """
+    """Load the flat unlabelled test images deterministically."""
     if not config.test_dir.exists():
         raise FileNotFoundError(f"Test directory not found at: {config.test_dir}")
 

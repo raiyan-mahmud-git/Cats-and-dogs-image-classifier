@@ -1,25 +1,4 @@
-"""
-src/catdog/export.py
-Model export and benchmarking utilities.
-
-Features:
-- Convert .keras → TFLite (float32 baseline + float16 quantized).
-- Strips training-only data augmentation layers to produce a clean,
-  deterministic inference graph compatible with TFLite MLIR converters.
-- Benchmark inference latency and file sizes across all formats.
-- CLI entry point: `python -m catdog.export`
-
-Design decisions:
-1. Training-time augmentation layers (RandomFlip, RandomRotation, etc.) contain
-   stateful random number generators (RNGs) with unsigned 32-bit integer tensors
-   that TFLite cannot convert. We build a clean inference-only model that keeps
-   the exact feature extraction and classification head while bypassing augmentation,
-   guaranteeing mathematical equivalence (0.0 prediction error) and clean export.
-2. Float16 quantization halves the model footprint (from ~9.5 MB down to ~4.8 MB)
-   with negligible impact on floating-point accuracy, perfect for edge or browser deployment.
-3. Benchmarking includes warm-up runs followed by 50 timed iterations, reporting
-   median and mean latency to eliminate cold-start noise and CPU scheduling spikes.
-"""
+"""Model export and benchmarking utilities (Keras to TFLite)."""
 
 import argparse
 import json
@@ -34,14 +13,7 @@ import numpy as np
 
 
 def _build_inference_model(model: Any, config: Optional[Any] = None) -> Any:
-    """Build an inference-only clone that strips training-only augmentation layers.
-
-    Design explanation:
-    Data augmentation is only active during training. At inference time, keeping
-    augmentation layers in the graph causes TFLite export to fail due to unsupported
-    RNG operations. This function builds an inference graph that routes directly
-    from image input through preprocessing and MobileNetV2 into the classifier head.
-    """
+    """Build an inference-only clone that strips training-only augmentation layers."""
     import tensorflow as tf
     from catdog.config import Config
 
@@ -205,18 +177,16 @@ def benchmark_model(
 
 
 def run_export_and_benchmark() -> Dict[str, Any]:
-    """Full Stage 5 export pipeline: convert + benchmark all formats."""
+    """Export pipeline: convert .keras model to TFLite and benchmark formats."""
     from catdog.config import Config
 
     config = Config()
     keras_path = config.models_dir / "transfer_model.keras"
     if not keras_path.exists():
-        raise FileNotFoundError(
-            f"Transfer model not found at {keras_path}. Complete Stage 3 first."
-        )
+        raise FileNotFoundError(f"Transfer model not found at {keras_path}.")
 
     print("=" * 65)
-    print("STAGE 5: MODEL EXPORT & BENCHMARKING")
+    print("MODEL EXPORT & BENCHMARKING")
     print("=" * 65)
 
     # 1. Convert

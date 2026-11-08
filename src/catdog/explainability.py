@@ -12,13 +12,7 @@ def generate_gradcam_heatmap(
     model: tf.keras.Model,
     img_array: np.ndarray,
 ) -> np.ndarray:
-    """Generate Grad-CAM heatmap for an image using MobileNetV2's final convolutional layer.
-
-    Design explanation:
-    Grad-CAM uses the gradients of the target class flowing into the final convolutional
-    layer (`out_relu`) to produce a coarse 2D localization map highlighting the salient
-    regions of the image that drove the decision.
-    """
+    """Generate Grad-CAM heatmap for an image using MobileNetV2's final convolutional layer."""
     if len(img_array.shape) == 3:
         img_batch = np.expand_dims(img_array, axis=0)
     else:
@@ -76,12 +70,7 @@ def superimpose_gradcam(
     alpha: float = 0.4,
     colormap_name: str = "jet",
 ) -> np.ndarray:
-    """Superimpose Grad-CAM heatmap over an RGB image.
-
-    Design explanation:
-    We upsample the low-resolution conv heatmap to image dimensions, apply a perceptually
-    vibrant colormap, and alpha-blend it with the original pixels to reveal exact feature focus.
-    """
+    """Superimpose Grad-CAM heatmap over an RGB image."""
     img_uint8 = np.asarray(img_array, dtype=np.uint8)
     h, w = img_uint8.shape[:2]
 
@@ -210,12 +199,7 @@ def plot_failure_gallery(
     wrong_cases: List[Dict[str, Any]],
     output_path: Path,
 ) -> None:
-    """Plot a gallery of the most confidently wrong predictions with Grad-CAM heatmaps.
-
-    Design explanation:
-    Pairing the original image with its Grad-CAM activation visually reveals why the model
-    failed (e.g. background textures, cropped features, or confusing pose angles).
-    """
+    """Plot a gallery of misclassified predictions with Grad-CAM heatmaps."""
     if not wrong_cases:
         return
 
