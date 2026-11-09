@@ -200,7 +200,7 @@ def train_transfer_learning(
         json.dump(results, f, indent=2)
     print(f"[Transfer] Results saved to: {report_path}")
 
-    # Build and save 3-stage model comparison table
+    # Build and save model comparison table
     save_model_comparison_table(config, results)
 
     return model, results
@@ -208,7 +208,7 @@ def train_transfer_learning(
 
 def save_model_comparison_table(config: Config, transfer_results: Dict[str, Any]) -> None:
     """Consolidate metrics across models into a comparison table."""
-    # Read Stage 1
+    # Read baseline metrics
     baseline_eval_p = config.reports_dir / "baseline_evaluation.json"
     s1_val_acc = 73.4
     s1_test_acc = 72.0
@@ -218,7 +218,7 @@ def save_model_comparison_table(config: Config, transfer_results: Dict[str, Any]
             s1_val_acc = round(d["validation_accuracy"] * 100, 2)
             s1_test_acc = round(d["test_accuracy"] * 100, 2)
 
-    # Read Stage 2
+    # Read ablation metrics
     stage2_ablation_p = config.reports_dir / "stage2_ablation.json"
     s2_val_acc = 61.8
     s2_test_acc = 76.0
@@ -245,7 +245,7 @@ def save_model_comparison_table(config: Config, transfer_results: Dict[str, Any]
 
     comparison = [
         {
-            "stage": "Stage 1: Scratch Baseline CNN",
+            "model": "Scratch Baseline CNN",
             "architecture": "3x Conv + Flatten + Dense 512",
             "parameters": 19034177,
             "disk_size_mb": round(b_size, 2),
@@ -253,7 +253,7 @@ def save_model_comparison_table(config: Config, transfer_results: Dict[str, Any]
             "test_accuracy": s1_test_acc,
         },
         {
-            "stage": "Stage 2: Modern Scratch CNN",
+            "model": "Modern Scratch CNN",
             "architecture": "4x Conv + BN + GAP + Dense 128",
             "parameters": 423265,
             "disk_size_mb": round(s2_size, 2),
@@ -261,7 +261,7 @@ def save_model_comparison_table(config: Config, transfer_results: Dict[str, Any]
             "test_accuracy": s2_test_acc,
         },
         {
-            "stage": "Stage 3: Transfer Learning",
+            "model": "Transfer Learning (MobileNetV2)",
             "architecture": "Pretrained MobileNetV2 + Fine-Tuned Head",
             "parameters": transfer_results["total_parameters"],
             "disk_size_mb": transfer_results["model_size_mb"],
