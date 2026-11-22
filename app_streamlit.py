@@ -22,6 +22,7 @@ from catdog.predict import (
     MAX_FILE_SIZE_MB,
     CatDogPredictor,
     _load_and_validate_image,
+    load_keras_model,
 )
 
 # ---------------------------------------------------------------------------
@@ -93,8 +94,6 @@ def load_predictor(model_filename: str) -> CatDogPredictor:
 @st.cache_resource(show_spinner="Loading Keras model for Grad-CAM explainability...")
 def load_keras_explain_model():
     """Load full Keras model for gradient-based attention mapping."""
-    import tensorflow as tf
-
     candidate = config.models_dir / "transfer_model_inference.keras"
     if not candidate.exists():
         candidate = config.models_dir / "transfer_model.keras"
@@ -102,7 +101,7 @@ def load_keras_explain_model():
         candidate = config.models_dir / "baseline_model.keras"
     if not candidate.exists():
         return None
-    return tf.keras.models.load_model(candidate)
+    return load_keras_model(candidate)
 
 
 # ---------------------------------------------------------------------------

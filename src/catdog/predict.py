@@ -2,8 +2,11 @@
 
 import argparse
 import csv
+import json
 import sys
+import tempfile
 import time
+import zipfile
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
@@ -23,6 +26,63 @@ def _lazy_imports():
 
         _tf = tf
         _keras = keras
+
+
+def load_keras_model(model_path: Union[str, Path]):
+    """Load a saved model, tolerating Keras augmentation config drift.
+
+    Some Keras releases serialize ``value_range`` for RandomRotation while
+    others do not accept it in the constructor. The setting is only used to
+    control clipping, so dropping it lets older runtimes load the model.
+    """
+    _lazy_imports()
+
+    model_path = Path(model_path)
+    try:
+        with zipfile.ZipFile(model_path, "r") as archive:
+            config = json.loads(archive.read("config.json"))
+    except (zipfile.BadZipFile, KeyError, json.JSONDecodeError):
+        # Leave nonstandard/legacy formats to Keras's own loader.
+        return _keras.models.load_model(model_path, compile=False)
+
+    def remove_unsupported_rotation_range(value):
+        changed = False
+        if isinstance(value, dict):
+            if (
+                value.get("class_name") == "RandomRotation"
+                and isinstance(value.get("config"), dict)
+            ):
+                changed = value["config"].pop("value_range", None) is not None
+            for child in value.values():
+                changed = remove_unsupported_rotation_range(child) or changed
+        elif isinstance(value, list):
+            for child in value:
+                changed = remove_unsupported_rotation_range(child) or changed
+        return changed
+
+    if not remove_unsupported_rotation_range(config):
+        return _keras.models.load_model(model_path, compile=False)
+
+    # Keras versions disagree on whether RandomRotation accepts value_range.
+    # Patch only the temporary archive config, preserving the user's model.
+    temp_path = None
+    try:
+        with tempfile.NamedTemporaryFile(suffix=".keras", delete=False) as temp:
+            temp_path = Path(temp.name)
+        with zipfile.ZipFile(model_path, "r") as source, zipfile.ZipFile(
+            temp_path, "w", compression=zipfile.ZIP_DEFLATED
+        ) as destination:
+            for item in source.infolist():
+                contents = (
+                    json.dumps(config).encode("utf-8")
+                    if item.filename == "config.json"
+                    else source.read(item.filename)
+                )
+                destination.writestr(item, contents)
+        return _keras.models.load_model(temp_path, compile=False)
+    finally:
+        if temp_path is not None:
+            temp_path.unlink(missing_ok=True)
 
 
 # ---------------------------------------------------------------------------
@@ -164,7 +224,7 @@ class CatDogPredictor:
             self._output_details = self._interpreter.get_output_details()
             self._model = None
         else:
-            self._model = _keras.models.load_model(self.model_path)
+            self._model = load_keras_model(self.model_path)
             self._interpreter = None
 
         self.img_size = (config.img_height, config.img_width)
