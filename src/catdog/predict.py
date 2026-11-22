@@ -181,7 +181,7 @@ class CatDogPredictor:
                 "transfer_model_float32.tflite",
                 "transfer_model_inference.keras",
                 "transfer_model.keras",
-                "improved_cnn.keras",
+                "cnn.keras",
                 "baseline_model.keras",
             ):
                 candidate = config.models_dir / name

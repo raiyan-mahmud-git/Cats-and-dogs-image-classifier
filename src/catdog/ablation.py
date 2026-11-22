@@ -141,7 +141,7 @@ def run_all_ablations(config: Config = None) -> Dict[str, Any]:
         config=config,
     )
 
-    save_path = config.models_dir / "improved_cnn.keras"
+    save_path = config.models_dir / "cnn.keras"
     best_model.save(save_path)
     print(f"\n[Ablation] Saved final improved CNN to: {save_path}")
 

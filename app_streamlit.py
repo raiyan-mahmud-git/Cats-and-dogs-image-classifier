@@ -105,7 +105,7 @@ with st.sidebar:
         "transfer_model_float16.tflite",
         "transfer_model_float32.tflite",
         "transfer_model_inference.keras",
-        "improved_cnn.keras",
+        "cnn.keras",
         "baseline_model.keras",
     ]:
         if (config.models_dir / name).exists():

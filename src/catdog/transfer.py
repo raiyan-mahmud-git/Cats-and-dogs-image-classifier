@@ -224,8 +224,8 @@ def save_model_comparison_table(config: Config, transfer_results: Dict[str, Any]
         else 72.6
     )
     s2_size = (
-        (config.models_dir / "improved_cnn.keras").stat().st_size / (1024 * 1024)
-        if (config.models_dir / "improved_cnn.keras").exists()
+        (config.models_dir / "cnn.keras").stat().st_size / (1024 * 1024)
+        if (config.models_dir / "cnn.keras").exists()
         else 1.6
     )
 

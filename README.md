@@ -142,7 +142,7 @@ Cats-and-dogs-image-classifier/
 │   └── workflows/
 │       └── ci.yml               # GitHub Actions CI matrix workflow
 ├── models/                      # Lightweight production & TFLite models
-│   ├── improved_cnn.keras
+│   ├── cnn.keras
 │   ├── transfer_model_float16.tflite
 │   ├── transfer_model_float32.tflite
 │   └── transfer_model_inference.keras

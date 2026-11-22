@@ -134,7 +134,7 @@ def _trained_model_available() -> bool:
         "transfer_model_float32.tflite",
         "transfer_model_inference.keras",
         "transfer_model.keras",
-        "improved_cnn.keras",
+        "cnn.keras",
         "baseline_model.keras",
     ]
     return any((config.models_dir / n).exists() for n in model_names)

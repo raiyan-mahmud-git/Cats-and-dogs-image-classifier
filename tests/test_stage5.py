@@ -115,7 +115,7 @@ class TestPredictor:
             (config.models_dir / n).exists()
             for n in (
                 "transfer_model.keras",
-                "improved_cnn.keras",
+                "cnn.keras",
                 "baseline_model.keras",
             )
         )
