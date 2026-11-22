@@ -48,9 +48,8 @@ def load_keras_model(model_path: Union[str, Path]):
     def remove_unsupported_rotation_range(value):
         changed = False
         if isinstance(value, dict):
-            if (
-                value.get("class_name") == "RandomRotation"
-                and isinstance(value.get("config"), dict)
+            if value.get("class_name") == "RandomRotation" and isinstance(
+                value.get("config"), dict
             ):
                 changed = value["config"].pop("value_range", None) is not None
             for child in value.values():
@@ -69,9 +68,10 @@ def load_keras_model(model_path: Union[str, Path]):
     try:
         with tempfile.NamedTemporaryFile(suffix=".keras", delete=False) as temp:
             temp_path = Path(temp.name)
-        with zipfile.ZipFile(model_path, "r") as source, zipfile.ZipFile(
-            temp_path, "w", compression=zipfile.ZIP_DEFLATED
-        ) as destination:
+        with (
+            zipfile.ZipFile(model_path, "r") as source,
+            zipfile.ZipFile(temp_path, "w", compression=zipfile.ZIP_DEFLATED) as destination,
+        ):
             for item in source.infolist():
                 contents = (
                     json.dumps(config).encode("utf-8")
