@@ -25,6 +25,7 @@ htmlcov/
 cats_and_dogs.zip
 cats_and_dogs/train/
 cats_and_dogs/validation/
+reports/tensorboard/
 
 # Large Training Checkpoints (>100MB exceeds GitHub limit)
 # Keep only the production deployment models (TFLite & inference model)
