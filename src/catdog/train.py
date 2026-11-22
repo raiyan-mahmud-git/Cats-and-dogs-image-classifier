@@ -55,17 +55,13 @@ def train_baseline(config: Config = None) -> tf.keras.Model:
     print(f"Batch size: {config.batch_size} | Epochs: {config.epochs} | Seed: {config.seed}")
     print("=" * 60)
 
-    # 1. Reproducibility
     set_seed(config.seed)
 
-    # 2. Data loading
     train_ds, val_ds = load_train_val_datasets(config)
 
-    # 3. Model construction
     model = build_baseline_model(config)
     model.summary()
 
-    # 4. Training (NO manual steps_per_epoch to prevent wasted 1-step epochs)
     history = model.fit(
         train_ds,
         validation_data=val_ds,
@@ -73,19 +69,16 @@ def train_baseline(config: Config = None) -> tf.keras.Model:
         verbose=1,
     )
 
-    # 5. Save model in modern Keras v3 format (.keras instead of legacy .h5)
     model_save_path = config.models_dir / "baseline_model.keras"
     model.save(model_save_path)
     print(f"[Training] Model successfully saved to: {model_save_path}")
 
-    # 6. Save raw history to JSON
     history_dict = {k: [float(v) for v in vals] for k, vals in history.history.items()}
     history_path = config.reports_dir / "baseline_history.json"
     with open(history_path, "w", encoding="utf-8") as f:
         json.dump(history_dict, f, indent=2)
     print(f"[Training] Training history saved to: {history_path}")
 
-    # 7. Diagnostic plot
     plot_path = config.reports_dir / "baseline_training_curves.png"
     plot_and_save_training_curves(history_dict, plot_path)
 

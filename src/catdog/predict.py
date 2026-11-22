@@ -85,9 +85,6 @@ def load_keras_model(model_path: Union[str, Path]):
             temp_path.unlink(missing_ok=True)
 
 
-# ---------------------------------------------------------------------------
-# Constants
-# ---------------------------------------------------------------------------
 VALID_EXTENSIONS = {".jpg", ".jpeg", ".png", ".bmp", ".gif", ".webp", ".tiff"}
 MAX_FILE_SIZE_MB = 20
 MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
@@ -95,9 +92,6 @@ DEFAULT_IMG_SIZE = (150, 150)
 CLASS_NAMES = {0: "Cat", 1: "Dog"}
 
 
-# ---------------------------------------------------------------------------
-# Image loading and validation
-# ---------------------------------------------------------------------------
 class ImageValidationError(Exception):
     """Raised when an input file cannot be processed as a valid image."""
 
@@ -123,21 +117,18 @@ def _load_and_validate_image(
     """
     image_path = Path(image_path)
 
-    # 1. Existence
     if not image_path.exists():
         raise ImageValidationError(f"File not found: {image_path}")
 
     if not image_path.is_file():
         raise ImageValidationError(f"Not a file: {image_path}")
 
-    # 2. Extension
     ext = image_path.suffix.lower()
     if ext not in VALID_EXTENSIONS:
         raise ImageValidationError(
             f"Unsupported file type '{ext}'. Accepted: {', '.join(sorted(VALID_EXTENSIONS))}"
         )
 
-    # 3. File size
     file_size = image_path.stat().st_size
     if file_size > MAX_FILE_SIZE_BYTES:
         size_mb = file_size / (1024 * 1024)
@@ -148,7 +139,6 @@ def _load_and_validate_image(
     if file_size == 0:
         raise ImageValidationError(f"File is empty (0 bytes): {image_path}")
 
-    # 4. Decode with Pillow (catches corrupt / truncated data)
     try:
         from PIL import Image as PILImage
 
@@ -157,30 +147,22 @@ def _load_and_validate_image(
     except Exception as e:
         raise ImageValidationError(f"Cannot decode image '{image_path.name}': {e}")
 
-    # 5. Channel normalization
     if pil_img.mode == "L":
-        # Grayscale → RGB by replicating the single channel 3 times
         pil_img = pil_img.convert("RGB")
     elif pil_img.mode == "RGBA":
-        # RGBA → RGB by compositing onto a white background
         background = PILImage.new("RGB", pil_img.size, (255, 255, 255))
-        background.paste(pil_img, mask=pil_img.split()[3])  # alpha channel
+        background.paste(pil_img, mask=pil_img.split()[3])
         pil_img = background
     elif pil_img.mode == "P":
-        # Palette mode → RGB
         pil_img = pil_img.convert("RGB")
     elif pil_img.mode != "RGB":
         pil_img = pil_img.convert("RGB")
 
-    # 6. Resize
     pil_img = pil_img.resize(target_size, PILImage.BILINEAR)
 
     return np.array(pil_img, dtype=np.float32)
 
 
-# ---------------------------------------------------------------------------
-# Predictor
-# ---------------------------------------------------------------------------
 class CatDogPredictor:
     """Unified predictor supporting both .keras and .tflite models."""
 
@@ -194,7 +176,6 @@ class CatDogPredictor:
         config = Config()
 
         if model_path is None:
-            # Default to the best available model
             for name in (
                 "transfer_model_float16.tflite",
                 "transfer_model_float32.tflite",
@@ -250,10 +231,8 @@ class CatDogPredictor:
         """
         image_path = Path(image_path)
 
-        # Load and validate (may raise ImageValidationError)
         img_array = _load_and_validate_image(image_path, self.img_size)
 
-        # Inference with timing
         t0 = time.perf_counter()
         if self._is_tflite:
             prob = self._predict_tflite(img_array)
@@ -291,7 +270,7 @@ class CatDogPredictor:
 
         for f in files:
             if f.suffix.lower() not in VALID_EXTENSIONS:
-                continue  # Silently skip non-image files (READMEs, etc.)
+                continue
             try:
                 result = self.predict_image(f)
                 results.append(result)
@@ -301,9 +280,6 @@ class CatDogPredictor:
         return results
 
 
-# ---------------------------------------------------------------------------
-# CLI
-# ---------------------------------------------------------------------------
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python -m catdog.predict",
@@ -380,7 +356,6 @@ def _print_folder_results(results: List[Dict[str, Any]]) -> None:
                 f"{r['time_ms']:>6.1f}ms"
             )
 
-    # Summary
     valid = [r for r in results if "error" not in r]
     errors = [r for r in results if "error" in r]
     cats = sum(1 for r in valid if r["label"] == "Cat")

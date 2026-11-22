@@ -12,9 +12,6 @@ from catdog.predict import (
 )
 
 
-# ---------------------------------------------------------------------------
-# Fixtures
-# ---------------------------------------------------------------------------
 @pytest.fixture
 def tmp_images(tmp_path):
     """Create a set of test images covering edge cases."""
@@ -62,9 +59,6 @@ def tmp_images(tmp_path):
     return images
 
 
-# ---------------------------------------------------------------------------
-# Image validation tests
-# ---------------------------------------------------------------------------
 class TestImageValidation:
     def test_load_valid_rgb_image(self, tmp_images):
         """A normal RGB JPEG loads successfully and has the right shape."""
@@ -110,9 +104,6 @@ class TestImageValidation:
             _load_and_validate_image(tmp_path / "nonexistent.jpg")
 
 
-# ---------------------------------------------------------------------------
-# Predictor tests (require a trained model)
-# ---------------------------------------------------------------------------
 class TestPredictor:
     @pytest.fixture(autouse=True)
     def _check_model(self):
@@ -174,9 +165,6 @@ class TestPredictor:
             predictor.predict_image(tmp_images["corrupt"])
 
 
-# ---------------------------------------------------------------------------
-# CLI argument parsing tests
-# ---------------------------------------------------------------------------
 class TestCLI:
     def test_parser_single_image(self):
         """Parser accepts a single image path."""
@@ -200,9 +188,6 @@ class TestCLI:
         assert args.model == "my.tflite"
 
 
-# ---------------------------------------------------------------------------
-# TFLite export test (if model exists)
-# ---------------------------------------------------------------------------
 class TestTFLiteExport:
     def test_tflite_inference_from_existing(self):
         """Verify TFLite inference works on an existing .tflite file.

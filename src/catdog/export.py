@@ -25,7 +25,6 @@ def _build_inference_model(model: Any, config: Optional[Any] = None) -> Any:
         name="image_input",
     )
 
-    # Detect rescaling layer
     rescaling_layer = None
     for name in ("mobilenet_rescaling", "rescaling"):
         try:
@@ -39,7 +38,6 @@ def _build_inference_model(model: Any, config: Optional[Any] = None) -> Any:
     else:
         x = inp
 
-    # Route through remaining layers skipping augmentation
     for layer in model.layers:
         if layer.name in (
             "image_input",
@@ -153,11 +151,9 @@ def benchmark_model(
         def _infer():
             return model.predict(dummy_input, verbose=0)
 
-    # Warm-up: let JIT / cache settle
     for _ in range(warmup_iters):
         _infer()
 
-    # Timed iterations
     timings: List[float] = []
     for _ in range(bench_iters):
         t0 = time.perf_counter()
@@ -189,14 +185,12 @@ def run_export_and_benchmark() -> Dict[str, Any]:
     print("MODEL EXPORT & BENCHMARKING")
     print("=" * 65)
 
-    # 1. Convert
     outputs = convert_to_tflite(
         keras_path,
         output_dir=config.models_dir,
         quantize_float16=True,
     )
 
-    # 2. Benchmark all formats
     print("\n[Benchmark] Running latency benchmarks (10 warm-up + 50 timed)...")
     all_paths = [keras_path] + list(outputs.values())
     benchmarks: List[Dict[str, Any]] = []
@@ -209,7 +203,6 @@ def run_export_and_benchmark() -> Dict[str, Any]:
         )
         benchmarks.append(result)
 
-    # 3. Print comparison table
     print("\n" + "=" * 65)
     print("MODEL FORMAT COMPARISON")
     print("=" * 65)
@@ -223,7 +216,6 @@ def run_export_and_benchmark() -> Dict[str, Any]:
             f"{b['median_ms']:>12.2f} {b['mean_ms']:>10.2f}"
         )
 
-    # Compression ratio
     keras_size = benchmarks[0]["file_size_mb"]
     print("─" * len(header))
     for b in benchmarks[1:]:
@@ -235,7 +227,6 @@ def run_export_and_benchmark() -> Dict[str, Any]:
 
     print("=" * 65)
 
-    # 4. Save report
     report = {
         "source_model": str(keras_path),
         "exported_models": {k: str(v) for k, v in outputs.items()},

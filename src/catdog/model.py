@@ -113,7 +113,6 @@ def build_improved_cnn(
     augmented = build_data_augmentation_layer()(inputs)
     x = layers.Rescaling(1.0 / 255.0, name="rescaling")(augmented)
 
-    # 4 Convolutional blocks
     filters_list = [32, 64, 128, 256]
     for i, filters in enumerate(filters_list, start=1):
         x = layers.Conv2D(
@@ -129,7 +128,6 @@ def build_improved_cnn(
         x = layers.ReLU(name=f"relu{i}")(x)
         x = layers.MaxPooling2D((2, 2), name=f"pool{i}")(x)
 
-    # Global pooling & head
     x = layers.GlobalAveragePooling2D(name="gap")(x)
     x = layers.Dense(
         128,

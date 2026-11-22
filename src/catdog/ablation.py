@@ -56,7 +56,6 @@ def run_ablation_experiment(
         verbose=1,
     )
 
-    # Final validation evaluation
     val_loss, val_acc = model.evaluate(val_ds, verbose=0)
     test_acc = evaluate_model_on_test(model, config)
 
@@ -110,7 +109,6 @@ def run_all_ablations(config: Config = None) -> Dict[str, Any]:
             config=config,
         )
 
-    # Variant 1: + GlobalAveragePooling2D
     gap_result, _ = run_ablation_experiment(
         "1. + GlobalAveragePooling2D",
         build_gap_model,
@@ -118,7 +116,6 @@ def run_all_ablations(config: Config = None) -> Dict[str, Any]:
         config=config,
     )
 
-    # Variant 2: + BatchNormalization (fixed LR)
     def build_bn_model(cfg):
         return build_improved_cnn(cfg, use_batchnorm=True, l2_reg=1e-4, dropout_rate=0.3)
 
@@ -129,7 +126,6 @@ def run_all_ablations(config: Config = None) -> Dict[str, Any]:
         config=config,
     )
 
-    # Variant 3: + LR Schedule & Callbacks (Final Improved CNN)
     callbacks = get_training_callbacks(
         config=config,
         experiment_name="improved_cnn",
@@ -145,12 +141,10 @@ def run_all_ablations(config: Config = None) -> Dict[str, Any]:
         config=config,
     )
 
-    # Save best improved model to models/improved_cnn.keras
     save_path = config.models_dir / "improved_cnn.keras"
     best_model.save(save_path)
     print(f"\n[Ablation] Saved final improved CNN to: {save_path}")
 
-    # Compile ablation comparison table
     all_results = [baseline_result, gap_result, bn_result, improved_result]
     summary = {
         "ablation_results": [
@@ -171,7 +165,6 @@ def run_all_ablations(config: Config = None) -> Dict[str, Any]:
         json.dump(summary, f, indent=2)
     print(f"[Ablation] Summary report saved to: {report_path}")
 
-    # Plot comparison of training curves
     plot_ablation_comparison(all_results, config.reports_dir / "stage2_ablation_curves.png")
 
     return summary

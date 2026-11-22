@@ -41,9 +41,6 @@ def run_comprehensive_evaluation(config: Config = None) -> Dict[str, Any]:
 
     model = tf.keras.models.load_model(model_path)
 
-    # -----------------------------------------------------------------
-    # 1. EVALUATION ON 1,000 VALIDATION SAMPLES (Statistically Robust)
-    # -----------------------------------------------------------------
     print("\n[Evaluation] Evaluating on 1,000 validation images...")
     _, val_ds = load_train_val_datasets(config)
 
@@ -58,7 +55,6 @@ def run_comprehensive_evaluation(config: Config = None) -> Dict[str, Any]:
 
     val_preds = model.predict(val_images, verbose=0).ravel()
 
-    # Metrics
     val_metrics = compute_binary_metrics(val_true, val_preds)
     fpr, tpr, roc_auc = compute_roc_auc(val_true, val_preds)
     bin_confs, bin_accs, ece = compute_calibration(val_true, val_preds)
@@ -69,9 +65,6 @@ def run_comprehensive_evaluation(config: Config = None) -> Dict[str, Any]:
         len(val_true),
     )
 
-    # -----------------------------------------------------------------
-    # 2. EVALUATION ON 50-IMAGE TEST SET & SIZING COMPARISON
-    # -----------------------------------------------------------------
     print("[Evaluation] Evaluating on 50-image test set...")
     test_ds, test_files = load_test_dataset(config)
 
@@ -89,7 +82,6 @@ def run_comprehensive_evaluation(config: Config = None) -> Dict[str, Any]:
         len(test_true),
     )
 
-    # Print Statistical comparison
     print("\n" + "=" * 65)
     print("STATISTICAL RIGOR & SAMPLE SIZE ANALYSIS")
     print("=" * 65)
@@ -117,9 +109,6 @@ def run_comprehensive_evaluation(config: Config = None) -> Dict[str, Any]:
     )
     print("=" * 65)
 
-    # -----------------------------------------------------------------
-    # 3. SAVE DIAGNOSTIC PLOTS
-    # -----------------------------------------------------------------
     cm_path = config.reports_dir / "confusion_matrix.png"
     plot_confusion_matrix(val_metrics["confusion_matrix"], cm_path)
 
@@ -129,9 +118,6 @@ def run_comprehensive_evaluation(config: Config = None) -> Dict[str, Any]:
     calib_path = config.reports_dir / "calibration_curve.png"
     plot_calibration_curve(bin_confs, bin_accs, ece, calib_path)
 
-    # -----------------------------------------------------------------
-    # 4. FAILURE ANALYSIS & GRAD-CAM GALLERY
-    # -----------------------------------------------------------------
     print("\n[Explainability] Generating Grad-CAM failure case analysis...")
     test_binary = (test_preds >= 0.5).astype(int)
     wrong_indices = np.where(test_binary != test_true)[0]
@@ -160,13 +146,9 @@ def run_comprehensive_evaluation(config: Config = None) -> Dict[str, Any]:
     gallery_path = config.reports_dir / "failure_analysis_gallery.png"
     plot_failure_gallery(wrong_cases, gallery_path)
 
-    # Also generate a representative success Grad-CAM comparison
     sample_success_path = config.reports_dir / "gradcam_sample_analysis.png"
     plot_sample_gradcam_comparisons(model, test_images, test_true, test_files, sample_success_path)
 
-    # -----------------------------------------------------------------
-    # 5. CONSOLIDATED JSON REPORT
-    # -----------------------------------------------------------------
     report = {
         "validation_set": {
             "samples": len(val_true),
@@ -217,7 +199,6 @@ def plot_sample_gradcam_comparisons(
     output_path: Path,
 ) -> None:
     """Plot sample true Cat and true Dog Grad-CAM overlays demonstrating correct focus."""
-    # Find one confident cat (true=0) and one confident dog (true=1)
     cat_idx = np.where(labels == 0)[0][0]
     dog_idx = np.where(labels == 1)[0][0]
 

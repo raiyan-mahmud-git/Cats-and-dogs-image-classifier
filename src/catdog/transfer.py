@@ -73,9 +73,7 @@ def train_transfer_learning(
     set_seed(config.seed)
     train_ds, val_ds = load_train_val_datasets(config)
 
-    # -------------------------------------------------------------
     # PHASE 1: Feature Extraction (Frozen Base)
-    # -------------------------------------------------------------
     print("\n--- PHASE 1: Training Classification Head (Base Frozen) ---")
     start_time = time.time()
     model = build_transfer_model(config, learning_rate=1e-3)
@@ -102,9 +100,7 @@ def train_transfer_learning(
         verbose=1,
     )
 
-    # -------------------------------------------------------------
     # PHASE 2: Fine-Tuning (Unfreeze Top Layers)
-    # -------------------------------------------------------------
     print(f"\n--- PHASE 2: Fine-Tuning Top Layers (Layers {fine_tune_at}+) ---")
     base_model.trainable = True
 
@@ -153,14 +149,11 @@ def train_transfer_learning(
     )
     total_training_time = time.time() - start_time
 
-    # Save final model if not already saved by checkpoint
     if not checkpoint_path.exists():
         model.save(checkpoint_path)
 
-    # Evaluate on validation dataset
     val_loss, val_acc = model.evaluate(val_ds, verbose=0)
 
-    # Evaluate on the 50-image test set
     test_ds, test_files = load_test_dataset(config)
     preds = model.predict(test_ds, verbose=0).ravel()
     binary_preds = [1 if p > 0.5 else 0 for p in preds]
@@ -176,11 +169,9 @@ def train_transfer_learning(
     print(f"Total Time:          {total_training_time:.1f}s")
     print("=" * 65)
 
-    # Save plot
     curves_path = config.reports_dir / "transfer_training_curves.png"
     plot_transfer_history(h1.history, h2.history, curves_path)
 
-    # Model artifact size on disk
     model_size_mb = checkpoint_path.stat().st_size / (1024 * 1024)
 
     results = {
@@ -200,7 +191,6 @@ def train_transfer_learning(
         json.dump(results, f, indent=2)
     print(f"[Transfer] Results saved to: {report_path}")
 
-    # Build and save model comparison table
     save_model_comparison_table(config, results)
 
     return model, results
@@ -208,7 +198,6 @@ def train_transfer_learning(
 
 def save_model_comparison_table(config: Config, transfer_results: Dict[str, Any]) -> None:
     """Consolidate metrics across models into a comparison table."""
-    # Read baseline metrics
     baseline_eval_p = config.reports_dir / "baseline_evaluation.json"
     s1_val_acc = 73.4
     s1_test_acc = 72.0
@@ -218,20 +207,17 @@ def save_model_comparison_table(config: Config, transfer_results: Dict[str, Any]
             s1_val_acc = round(d["validation_accuracy"] * 100, 2)
             s1_test_acc = round(d["test_accuracy"] * 100, 2)
 
-    # Read ablation metrics
     stage2_ablation_p = config.reports_dir / "stage2_ablation.json"
     s2_val_acc = 61.8
     s2_test_acc = 76.0
     if stage2_ablation_p.exists():
         with open(stage2_ablation_p, "r", encoding="utf-8") as f:
             d = json.load(f)
-            # Find Variant 2 (+ BatchNormalization)
             for item in d.get("ablation_results", []):
                 if "BatchNormalization" in item["variant"]:
                     s2_val_acc = item["val_accuracy"]
                     s2_test_acc = item["test_accuracy"]
 
-    # Model file sizes
     b_size = (
         (config.models_dir / "baseline_model.keras").stat().st_size / (1024 * 1024)
         if (config.models_dir / "baseline_model.keras").exists()

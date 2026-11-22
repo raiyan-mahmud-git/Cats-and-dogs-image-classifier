@@ -5,9 +5,6 @@ from pathlib import Path
 
 import pytest
 
-# ---------------------------------------------------------------------------
-# Ensure src/ is on the Python path (for non-editable-install workflows)
-# ---------------------------------------------------------------------------
 ROOT_DIR = Path(__file__).resolve().parents[1]
 SRC_DIR = ROOT_DIR / "src"
 for d in (ROOT_DIR, SRC_DIR):
@@ -15,9 +12,6 @@ for d in (ROOT_DIR, SRC_DIR):
         sys.path.insert(0, str(d))
 
 
-# ---------------------------------------------------------------------------
-# Shared image fixture (edge-case gallery)
-# ---------------------------------------------------------------------------
 @pytest.fixture
 def tmp_images(tmp_path):
     """Create a set of test images covering common edge cases.
@@ -77,9 +71,6 @@ def tmp_images(tmp_path):
     return images
 
 
-# ---------------------------------------------------------------------------
-# Tiny model fixture (CI-safe, no trained weights needed)
-# ---------------------------------------------------------------------------
 @pytest.fixture
 def tiny_model(tmp_path):
     """Build and save a tiny (~1K params) model for CI testing.
@@ -133,9 +124,6 @@ def tiny_tflite(tiny_model, tmp_path):
     return tflite_path
 
 
-# ---------------------------------------------------------------------------
-# Helper: check if trained models exist
-# ---------------------------------------------------------------------------
 def _trained_model_available() -> bool:
     """Check if any trained model file exists in the models/ directory."""
     from catdog.config import Config

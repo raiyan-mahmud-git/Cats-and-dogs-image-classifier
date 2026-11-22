@@ -4,7 +4,6 @@ import sys
 from pathlib import Path
 from typing import Dict, Tuple, Union
 
-# Ensure src/ is on Python path (supports standalone execution & Hugging Face Spaces)
 SRC_DIR = Path(__file__).resolve().parent / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
@@ -17,9 +16,6 @@ from catdog.config import Config
 from catdog.explainability import generate_gradcam_heatmap, superimpose_gradcam
 from catdog.predict import CatDogPredictor, _load_and_validate_image
 
-# ---------------------------------------------------------------------------
-# Global State & Lazy Model Loading
-# ---------------------------------------------------------------------------
 config = Config()
 _predictor: Union[CatDogPredictor, None] = None
 _keras_model = None
@@ -48,9 +44,6 @@ def get_keras_model():
     return _keras_model
 
 
-# ---------------------------------------------------------------------------
-# Prediction & Explanation Logic
-# ---------------------------------------------------------------------------
 def predict_and_explain(
     input_image: PILImage.Image,
     show_gradcam: bool,
@@ -83,7 +76,6 @@ def predict_and_explain(
             "Dog": dog_prob,
         }
 
-        # Grad-CAM overlay generation
         overlay_img = None
         if show_gradcam:
             keras_model = get_keras_model()
@@ -94,7 +86,6 @@ def predict_and_explain(
             overlay = superimpose_gradcam(raw_array.astype(np.uint8), heatmap, alpha=0.45)
             overlay_img = overlay
 
-        # Clean up temporary file
         tmp_path.unlink(missing_ok=True)
 
         summary = (
@@ -107,9 +98,6 @@ def predict_and_explain(
         return {}, None, f"Error processing image: {str(e)}"
 
 
-# ---------------------------------------------------------------------------
-# Gradio UI Construction
-# ---------------------------------------------------------------------------
 def build_gradio_app() -> gr.Blocks:
     """Build the Blocks-based interactive web UI."""
     sample_images = []

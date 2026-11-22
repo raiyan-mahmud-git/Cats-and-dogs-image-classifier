@@ -25,9 +25,6 @@ from catdog.predict import (
     _load_and_validate_image,
 )
 
-# ---------------------------------------------------------------------------
-# App Initialization & Schemas
-# ---------------------------------------------------------------------------
 config = Config()
 
 app = FastAPI(
@@ -44,7 +41,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Static files directory
 STATIC_DIR = Path(__file__).parent / "static"
 STATIC_DIR.mkdir(parents=True, exist_ok=True)
 if STATIC_DIR.exists():
@@ -73,9 +69,6 @@ class PredictionResponse(BaseModel):
     )
 
 
-# ---------------------------------------------------------------------------
-# Lazy Singletons
-# ---------------------------------------------------------------------------
 _predictor: Optional[CatDogPredictor] = None
 _keras_model = None
 
@@ -103,9 +96,6 @@ def get_api_keras_model():
     return _keras_model
 
 
-# ---------------------------------------------------------------------------
-# Endpoints
-# ---------------------------------------------------------------------------
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
 async def serve_index():
     """Serve the single-page responsive web application."""
@@ -164,7 +154,6 @@ async def predict_image_endpoint(
     - **file**: Multipart uploaded image file (JPEG, PNG, WebP, etc., max 20 MB).
     - **explain**: If true, includes a base64 encoded Grad-CAM attention overlay.
     """
-    # 1. Validate file extension
     filename = Path(file.filename or "uploaded.jpg").name
     ext = Path(filename).suffix.lower()
     if ext not in VALID_EXTENSIONS:
@@ -173,7 +162,6 @@ async def predict_image_endpoint(
             detail=f"Unsupported file type '{ext}'. Allowed: {', '.join(sorted(VALID_EXTENSIONS))}",
         )
 
-    # 2. Read bytes and enforce size limit
     contents = await file.read()
     if len(contents) > MAX_FILE_SIZE_BYTES:
         raise HTTPException(
@@ -186,7 +174,6 @@ async def predict_image_endpoint(
             detail="Uploaded file is empty (0 bytes).",
         )
 
-    # 3. Save to temporary file for standardized loader
     import tempfile
 
     with tempfile.NamedTemporaryFile(suffix=ext, delete=False) as tmp:
@@ -199,7 +186,6 @@ async def predict_image_endpoint(
         dog_prob = res["dog_probability"]
         cat_prob = round(1.0 - dog_prob, 4)
 
-        # 4. Optional Grad-CAM overlay
         gradcam_b64 = None
         if explain:
             keras_model = get_api_keras_model()
@@ -209,7 +195,6 @@ async def predict_image_endpoint(
             heatmap = generate_gradcam_heatmap(keras_model, raw_array)
             overlay = superimpose_gradcam(raw_array.astype(np.uint8), heatmap, alpha=0.45)
 
-            # Encode overlay as base64 JPEG
             overlay_pil = PILImage.fromarray(overlay)
             buf = io.BytesIO()
             overlay_pil.save(buf, format="JPEG", quality=90)

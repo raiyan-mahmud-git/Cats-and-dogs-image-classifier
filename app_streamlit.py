@@ -9,7 +9,6 @@ import pandas as pd
 from PIL import Image as PILImage
 import streamlit as st
 
-# Ensure src/ is importable
 ROOT_DIR = Path(__file__).resolve().parent
 SRC_DIR = ROOT_DIR / "src"
 if str(SRC_DIR) not in sys.path:
@@ -25,9 +24,6 @@ from catdog.predict import (
     load_keras_model,
 )
 
-# ---------------------------------------------------------------------------
-# Streamlit Page Config & Custom Styling
-# ---------------------------------------------------------------------------
 st.set_page_config(
     page_title="Cat vs Dog AI Vision",
     page_icon="🐾",
@@ -79,9 +75,6 @@ st.markdown(
 config = Config()
 
 
-# ---------------------------------------------------------------------------
-# Cached Model Loaders
-# ---------------------------------------------------------------------------
 @st.cache_resource(show_spinner="Loading inference model into memory...")
 def load_predictor(model_filename: str) -> CatDogPredictor:
     """Load and cache CatDogPredictor singleton."""
@@ -104,9 +97,6 @@ def load_keras_explain_model():
     return load_keras_model(candidate)
 
 
-# ---------------------------------------------------------------------------
-# Sidebar Controls
-# ---------------------------------------------------------------------------
 with st.sidebar:
     st.title("🐾 Configuration")
 
@@ -151,9 +141,6 @@ with st.sidebar:
     )
 
 
-# ---------------------------------------------------------------------------
-# Main UI Tabs
-# ---------------------------------------------------------------------------
 st.markdown('<div class="main-header">🐾 Cat vs Dog AI Vision</div>', unsafe_allow_html=True)
 st.markdown(
     '<div class="sub-header">Production-grade binary image classification with MobileNetV2 and Grad-CAM salience explainability.</div>',
@@ -162,9 +149,6 @@ st.markdown(
 
 tab1, tab2 = st.tabs(["📷 Single Image Analysis", "📁 Batch Classification"])
 
-# ---------------------------------------------------------------------------
-# TAB 1: Single Image Analysis
-# ---------------------------------------------------------------------------
 with tab1:
     col_input, col_result = st.columns([1, 1], gap="medium")
 
@@ -228,7 +212,6 @@ with tab1:
             predictor = load_predictor(selected_model)
 
             try:
-                # Run prediction
                 res = predictor.predict_image(input_image_path)
                 label = res["label"]
                 conf = res["confidence_pct"]
@@ -236,7 +219,6 @@ with tab1:
                 p_cat = round(1.0 - p_dog, 4)
                 latency = res["time_ms"]
 
-                # Result cards
                 m1, m2, m3 = st.columns(3)
                 m1.metric("Predicted Class", f"{'🐶' if label == 'Dog' else '🐱'} {label}")
                 m2.metric("Confidence", f"{conf:.1f}%")
@@ -246,7 +228,6 @@ with tab1:
                 st.progress(float(p_dog), text=f"🐶 Dog Probability: {p_dog * 100:.2f}%")
                 st.progress(float(p_cat), text=f"🐱 Cat Probability: {p_cat * 100:.2f}%")
 
-                # Grad-CAM Section
                 if enable_gradcam:
                     st.markdown("---")
                     st.markdown("#### 🔬 Grad-CAM Attention Heatmap")
@@ -295,9 +276,6 @@ with tab1:
             st.info("👈 Please upload an image or pick a benchmark sample to view predictions.")
 
 
-# ---------------------------------------------------------------------------
-# TAB 2: Batch Classification
-# ---------------------------------------------------------------------------
 with tab2:
     st.subheader("📁 Batch File Processing")
     st.write(

@@ -24,7 +24,6 @@ def evaluate_baseline(
         print(f"[Evaluation] Loading model from: {model_path}")
         model = tf.keras.models.load_model(model_path)
 
-    # 1. Validation evaluation
     _, val_ds = load_train_val_datasets(config)
     val_loss, val_accuracy = model.evaluate(val_ds, verbose=0)
     print("\n" + "=" * 60)
@@ -33,7 +32,6 @@ def evaluate_baseline(
     print(f"Validation Accuracy: {val_accuracy * 100:.2f}%")
     print("=" * 60)
 
-    # 2. Test set evaluation
     test_ds, test_files = load_test_dataset(config)
     raw_predictions = model.predict(test_ds, verbose=0)
 
@@ -46,7 +44,6 @@ def evaluate_baseline(
         f"Mismatch: {len(probabilities)} predictions vs {len(ground_truth)} answers"
     )
 
-    # 3. Filename order and alignment verification
     print("\n50-IMAGE TEST SET PREDICTIONS & GROUND TRUTH ALIGNMENT:")
     print("-" * 75)
     print(
@@ -87,7 +84,6 @@ def evaluate_baseline(
     print(f"Test Accuracy:     {test_accuracy * 100:.2f}%")
     print("=" * 75)
 
-    # 4. Save evaluation report
     report = {
         "validation_loss": float(val_loss),
         "validation_accuracy": float(val_accuracy),
