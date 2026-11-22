@@ -1,4 +1,4 @@
-"""Unit tests for FastAPI REST API and web application."""
+"""Unit tests for the FastAPI REST API."""
 
 import io
 import pytest
@@ -87,14 +87,3 @@ class TestFastAPIEndpoints:
         assert resp.status_code == 200
         assert resp.headers["content-type"] == "image/jpeg"
         assert len(resp.content) > 0
-
-
-class TestGradioApp:
-    def test_gradio_app_construction(self):
-        """Verify Gradio app builds properly from app.py."""
-        from app import build_gradio_app
-        import gradio as gr
-
-        demo = build_gradio_app()
-        assert isinstance(demo, gr.Blocks)
-        assert demo.title == "Cat vs Dog AI Classifier"

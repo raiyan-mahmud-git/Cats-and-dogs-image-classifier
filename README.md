@@ -21,10 +21,10 @@ Starting from a fragile baseline CNN (~74% accuracy), this project systematicall
 - **🎯 State-of-the-Art Accuracy:** Achieved **98.0% accuracy** on the official 50-image freeCodeCamp test set (benchmark threshold: 63%).
 - **🔬 Explainable AI (XAI):** Built-in **Grad-CAM** (Gradient-Weighted Class Activation Mapping) on MobileNetV2's final convolutional layer (`out_relu`), generating real-time visual attention overlays highlighting discriminatory features (eyes, snout, ears).
 - **⚡ Ultra-Fast Edge Inference:** Exported clean **TFLite Float16** models offering **~3.5 ms CPU latency** with an 82% footprint reduction (from 25.1 MB down to **4.57 MB**).
-- **🖥️ Dual Production Interfaces:**
+- **🖥️ Web Dashboard and API:**
   - **Streamlit Dashboard ([`app_streamlit.py`](app_streamlit.py)):** Drag-and-drop prediction, Grad-CAM opacity sliders, benchmark sample gallery, and batch image classification with CSV export.
   - **FastAPI REST API ([`src/catdog/api.py`](src/catdog/api.py)):** Production REST API with auto-generated OpenAPI / Swagger docs at `/docs`.
-- **🛡️ Battle-Tested Architecture:** 42 automated tests across unit, integration, and CI suites with GitHub Actions multi-version matrix testing.
+- **🛡️ Battle-Tested Architecture:** 41 automated tests across unit, integration, and CI suites with GitHub Actions multi-version matrix testing.
 
 ---
 
@@ -112,7 +112,7 @@ The application is deployed continuously via **Streamlit Community Cloud**, dire
 This project enforces strict code quality and test coverage via **pytest** and **GitHub Actions**:
 
 ```powershell
-# Run the complete test suite (42 tests)
+# Run the complete test suite (41 tests)
 pytest tests/ -v
 
 # Run fast unit tests only (skipping slow weight loads)
@@ -129,7 +129,7 @@ ruff format --check src/ tests/
 - `tests/test_stage3.py`: MobileNetV2 head freezing, rescaling, fine-tuning transitions.
 - `tests/test_stage4.py`: Binary metrics, ROC-AUC, Wilson score confidence intervals, Grad-CAM generation.
 - `tests/test_stage5.py`: Input validation edge cases (corrupt, grayscale, RGBA, oversized), CLI parsing, and TFLite inference.
-- `tests/test_stage6.py`: FastAPI endpoints (`/api/health`, `/api/predict`, `/api/sample`) and UI construction.
+- `tests/test_stage6.py`: FastAPI endpoints (`/api/health`, `/api/predict`, `/api/sample`).
 - `tests/test_stage7.py`: Packaging integrity (PEP 621), CI workflow schema, and synthetic dummy model fixtures.
 
 ---
@@ -157,8 +157,7 @@ Cats-and-dogs-image-classifier/
 │       ├── metrics.py           # Precision, recall, ROC-AUC, calibration
 │       ├── model.py             # CNN & MobileNetV2 architectures
 │       └── predict.py           # Production inference engine & CLI
-├── tests/                       # 42 automated tests & conftest fixtures
-├── app.py                       # Gradio entrypoint
+├── tests/                       # 41 automated tests & conftest fixtures
 ├── app_streamlit.py             # Streamlit dashboard
 ├── pyproject.toml               # PEP 621 package configuration
 ├── requirements.txt             # Pinned production dependencies
